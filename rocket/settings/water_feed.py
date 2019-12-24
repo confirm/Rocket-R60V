@@ -1,5 +1,5 @@
 '''
-WaterFeed setting.
+Water feed setting.
 '''
 
 __all__ = (

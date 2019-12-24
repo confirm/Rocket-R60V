@@ -7,3 +7,5 @@ from .language import Language
 from .brew_boiler_temperature import BrewBoilerTemperature
 from .service_boiler_temperature import ServiceBoilerTemperature
 from .water_feed import WaterFeed
+from .service_boiler import ServiceBoiler
+from .standby import Standby
