@@ -1,0 +1,5 @@
+*.pyc
+.pylintrc
+.venv/
+__pycache__/
+tox.ini
