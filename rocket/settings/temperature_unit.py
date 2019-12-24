@@ -11,7 +11,7 @@ from .base import ChoiceSetting
 
 class TemperatureUnit(ChoiceSetting):
     '''
-    The temperature unit in Celsius or Fahrenheit.
+    The temperature unit.
     '''
     offset = 0
 

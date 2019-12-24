@@ -11,7 +11,7 @@ from .base import RangeSetting
 
 class ServiceBoilerTemperature(RangeSetting):
     '''
-    The language of the machine.
+    The temperature of the service boiler.
     '''
     offset = 3
 

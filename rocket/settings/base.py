@@ -181,6 +181,12 @@ class Setting:
             LOGGER.error(error, data)
             raise ValidationError(error % data)
 
+    def set_cli_value(self, argument):
+        '''
+        Parse the CLI argument and set it on the machine.
+        '''
+        self.set(argument)
+
 
 class ChoiceSetting(Setting):
     '''

@@ -11,7 +11,7 @@ from .base import ChoiceSetting
 
 class WaterFeed(ChoiceSetting):
     '''
-    The language of the machine.
+    The source of the water feed.
     '''
     offset = 70
 

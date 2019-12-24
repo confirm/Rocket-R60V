@@ -34,8 +34,6 @@ class Machine:
         self.settings = dict(self.init_settings())
         self.socket  = None
 
-        self.connect()
-
     def __del__(self):
         '''
         Destructor.
@@ -109,12 +107,8 @@ class Machine:
         '''
         Disconnect from the machine.
         '''
-        LOGGER.info('Closing connection…')
         if self.socket is not None:
             self.socket.close()
-            LOGGER.info('Disconnected.')
-        else:
-            LOGGER.debug('Connection already closed')
 
     def read(self):
         '''
