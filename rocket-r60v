@@ -8,8 +8,8 @@ import argparse
 import logging
 import sys
 
-from rocket.machine import Machine
-from rocket.exceptions import RocketError
+from rocket_r60v.machine import Machine
+from rocket_r60v.exceptions import RocketError
 
 if __name__ == '__main__':
 

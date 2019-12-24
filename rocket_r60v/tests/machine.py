@@ -7,8 +7,8 @@ Unit test cases for the Rocket machine module.
 from unittest import TestCase, main
 from unittest.mock import patch
 
-from rocket.machine import Machine
-from rocket.exceptions import RocketConnectionError
+from rocket_r60v.machine import Machine
+from rocket_r60v.exceptions import RocketConnectionError
 
 
 class TestMachine(TestCase):
@@ -32,7 +32,7 @@ class TestMachine(TestCase):
         with self.assertRaises(RocketConnectionError):
             machine.connect()
 
-    @patch('rocket.machine.socket.create_connection')
+    @patch('rocket_r60v.machine.socket.create_connection')
     def test_socket_missing_hello(self, socket_mock_function):
         '''
         Test if ``RocketConnectionError`` is raised when socket connects but
@@ -42,7 +42,7 @@ class TestMachine(TestCase):
         with self.assertRaises(RocketConnectionError):
             machine.connect()
 
-    @patch('rocket.machine.socket.create_connection')
+    @patch('rocket_r60v.machine.socket.create_connection')
     def test_socket_connect(self, socket_mock_function):
         '''
         Test the socket connection.

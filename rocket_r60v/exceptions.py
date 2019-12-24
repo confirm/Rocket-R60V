@@ -25,3 +25,9 @@ class SettingValueError(RocketError):
     '''
     Exception which is thrown when an invalid value is specified for a setting.
     '''
+
+
+class ReadOnlySettingError(RocketError):
+    '''
+    Error which is thrown when a read-only setting is trying to be written.
+    '''

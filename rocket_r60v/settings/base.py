@@ -11,7 +11,7 @@ __all__ = (
 import logging
 from functools import reduce
 
-from rocket.exceptions import ValidationError, SettingValueError
+from rocket_r60v.exceptions import ValidationError, SettingValueError, ReadOnlySettingError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -20,6 +20,8 @@ class Setting:
     '''
     The base setting from which all other settings should inherit.
     '''
+    read_only = False
+
     length = 1
 
     @property
@@ -172,8 +174,15 @@ class Setting:
 
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
+        name = self.__class__.__name__
+
+        if self.read_only:
+            error = 'Setting %s not writable'
+            LOGGER.error(error, name)
+            raise ReadOnlySettingError(error % name)
+
         data = f'{data:02X}'
-        LOGGER.debug('Setting value for %s to "%s"…', self.__class__.__name__, data)
+        LOGGER.debug('Setting value for %s to "%s"…', name, data)
 
         data = self.send('w', data)
         if data != 'OK':
