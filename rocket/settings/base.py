@@ -5,6 +5,7 @@ Base setting module.
 __all__ = (
     'Setting',
     'ChoiceSetting',
+    'RangeSetting',
 )
 
 import logging
@@ -161,7 +162,7 @@ class Setting:
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s…', self.__class__.__name__)
-        return self.send('r')
+        return int(self.send('r'), 16)
 
     def set(self, data):
         '''
@@ -198,24 +199,6 @@ class ChoiceSetting(Setting):
         '''
         raise NotImplementedError('Choices property not implemented')
 
-    def get_choice(self, index):
-        '''
-        Return the choice for a specific index.
-
-        :param str index: The index
-
-        :return: The choice
-        :rtype: str
-        '''
-        try:
-            choice = self.choices[int(index)]
-            LOGGER.info('Choice of %s is "%s"', self.__class__.__name__, choice)
-            return choice
-        except IndexError:
-            error = 'Unknown choice (#%d) on machine'
-            LOGGER.error(error, index)
-            raise SettingValueError(error % index)
-
     def get(self):
         '''
         Get the choice setting value from the machine.
@@ -223,8 +206,15 @@ class ChoiceSetting(Setting):
         :return: The setting choice
         :rtype: str
         '''
-        index  = super().get()
-        return self.get_choice(index)
+        try:
+            index  = super().get()
+            choice = self.choices[index]
+            LOGGER.info('Choice of %s is "%s"', self.__class__.__name__, choice)
+            return choice
+        except IndexError:
+            error = 'Unknown choice (#%d) on machine'
+            LOGGER.error(error, index)
+            raise SettingValueError(error % index)
 
     def set(self, choice):  # pylint: disable=arguments-differ
         '''
@@ -232,8 +222,7 @@ class ChoiceSetting(Setting):
 
         :param str choice: The name of the choice
 
-        :return: The setting choice
-        :rtype: str
+        :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
         if choice not in self.choices:
             error = 'Invalid choice "%s", valid choises are "%s"'
@@ -241,4 +230,62 @@ class ChoiceSetting(Setting):
             raise SettingValueError(error % (choice, self.choices))
 
         LOGGER.debug('Setting value for %s to choice "%s"…', self.__class__.__name__, choice)
-        return super().set(self.choices.index(choice))
+        super().set(self.choices.index(choice))
+
+
+class RangeSetting(Setting):
+    '''
+    Setting which uses a valid integer range.
+    '''
+
+    @property
+    def range(self):
+        '''
+        The valid range.
+
+        :return: The range
+        :rtype: tuple
+
+        :raises NotImplementedError: When not implemented
+        '''
+        raise NotImplementedError('Range property not implemented')
+
+    def validate_value(self, value):
+        '''
+        Validate if value is in valid range.
+
+        :param str value: The value
+
+        :return: The value
+        :rtype: int
+
+        :raises AssertionError: When value is not in valid range
+        '''
+        min_value, max_value = self.range
+        try:
+            assert min_value <= value <= max_value
+        except AssertionError:
+            error = 'Value "%d" is not in valid range [%d-%d]'
+            LOGGER.error(error, value, min_value, max_value)
+            raise SettingValueError(error % (value, min_value, max_value))
+
+        return value
+
+    def get(self):
+        '''
+        Get the setting value from the machine.
+
+        :return: The value
+        :rtype: str
+        '''
+        return self.validate_value(super().get())
+
+    def set(self, value):  # pylint: disable=arguments-differ
+        '''
+        Set the setting value on the machine.
+
+        :param str data: The setting value
+
+        :raises rocket.exceptions.ValidationError: When response data isn't "OK"
+        '''
+        super().set(self.validate_value(value))
