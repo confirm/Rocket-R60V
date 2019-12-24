@@ -156,21 +156,25 @@ class Setting:
         LOGGER.info('Received data is "%s"', data)
         return data
 
-    def get(self):
+    def get(self, convert_int=True):
         '''
         Get the setting value from the machine.
+
+        :param bool convert_int: Convert received hex value (base 16) to int (base 10)
 
         :return: The setting value
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s…', self.__class__.__name__)
-        return int(self.send('r'), 16)
+        data = self.send('r')
+        return int(data, 16) if convert_int else data
 
-    def set(self, data):
+    def set(self, data, convert_int=True):
         '''
         Set the setting value on the machine.
 
         :param str data: The setting value
+        :param bool convert_int: Convert received int value (base 10) to hex (base 16)
 
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
@@ -181,7 +185,10 @@ class Setting:
             LOGGER.error(error, name)
             raise ReadOnlySettingError(error % name)
 
-        data = f'{data:02X}'
+        if convert_int:
+            length = 2 * self.length
+            data   = f'{data:0{length}X}'
+
         LOGGER.debug('Setting value for %s to "%s"…', name, data)
 
         data = self.send('w', data)
@@ -195,7 +202,6 @@ class Setting:
         Parse the CLI argument and set it on the machine.
         '''
         self.set(argument)
-
 
 class ChoiceSetting(Setting):
     '''
