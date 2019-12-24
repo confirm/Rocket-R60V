@@ -14,13 +14,20 @@ from rocket_r60v.exceptions import RocketError
 if __name__ == '__main__':
 
     parser    = argparse.ArgumentParser(description='Remote control the Rocket R 60V.')
-    subparser = parser.add_subparsers(dest='setting')
+    subparser = parser.add_subparsers(dest='setting', required=True)
 
     parser.add_argument(
         '-v',
         action='store_true',
         dest='verbose',
         help='Verbose mode',
+    )
+
+    parser.add_argument(
+        '-l',
+        nargs=1,
+        dest='logfile',
+        help='The filename of the logfile',
     )
 
     machine = Machine()
@@ -36,13 +43,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    logging.basicConfig(
-        filename='rocket.log',
-        level=logging.INFO,
-        format='%(asctime)s - %(module)s - [%(levelname)s]: %(message)s'
-    )
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG)
+    logging_config = {
+        'format': '%(asctime)s - %(module)s - [%(levelname)s]: %(message)s',
+        'level': logging.DEBUG if args.verbose else logging.INFO,
+        'filename': args.logfile
+    }
+    logging.basicConfig(**logging_config)
 
     try:
         machine.connect()
