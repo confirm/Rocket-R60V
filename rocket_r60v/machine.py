@@ -137,4 +137,5 @@ class Machine:
         except socket.timeout:
             if attempt >= self.retries:
                 raise
+            LOGGER.warning('Timeout occured, retrying…')
             return self.send(data, attempt + 1)

@@ -17,17 +17,18 @@ if __name__ == '__main__':
     subparser = parser.add_subparsers(dest='setting', required=True)
 
     parser.add_argument(
-        '-v',
-        action='store_true',
+        '-v', '--verbose',
+        action='count',
+        default=0,
         dest='verbose',
-        help='Verbose mode',
+        help='verbose mode (-v for warning, -vv for info, -vvv for debug)',
     )
 
     parser.add_argument(
-        '-l',
+        '-f', '--logfile',
         nargs=1,
         dest='logfile',
-        help='The filename of the logfile',
+        help='the filename of the logfile',
     )
 
     machine = Machine()
@@ -45,7 +46,7 @@ if __name__ == '__main__':
 
     logging_config = {
         'format': '%(asctime)s - %(module)s - [%(levelname)s]: %(message)s',
-        'level': logging.DEBUG if args.verbose else logging.INFO,
+        'level': 40 - (args.verbose * 10),
         'filename': args.logfile
     }
     logging.basicConfig(**logging_config)
