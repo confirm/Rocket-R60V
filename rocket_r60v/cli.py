@@ -20,11 +20,13 @@ class CLI:
         :param rocket_r60v.machine.Machine machine: The machine
         '''
         self.machine = machine
+        self.args    = None
 
         self.init_parser()
         self.init_parser_arguments()
         self.init_setting_parsers()
         self.init_debug_parsers()
+
 
     def init_parser(self):
         '''
@@ -141,8 +143,7 @@ class CLI:
 
         if args.action in ('read', 'write'):
             return self.execute_debug_action()
-        else:
-            return self.execute_machine_action()
+        return self.execute_machine_action()
 
     def execute_debug_action(self):
         '''
@@ -176,5 +177,5 @@ class CLI:
 
         if hasattr(args, 'value') and args.value:
             setattr(machine, args.action, args.value)
-        else:
-            return getattr(machine, args.action)
+            return 'OK'
+        return getattr(machine, args.action)

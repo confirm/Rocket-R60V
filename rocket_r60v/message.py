@@ -62,7 +62,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
             - Envelope: The command, offset & length (i.e. ``w00010001``)
     '''
 
-    def __init__(self, command, offset, length, data='', convert_int=True):
+    def __init__(self, command, offset, length, data='', convert_int=True):  # pylint: disable=too-many-arguments
         '''
         The message for the Rocket API.
 
