@@ -52,14 +52,14 @@ class CLI:
             action='count',
             default=0,
             dest='verbose',
-            help='Verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)',
+            help='verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)',
         )
 
         self.parser.add_argument(
             '-f', '--logfile',
             nargs=1,
             dest='logfile',
-            help='The filename of the logfile',
+            help='the filename of the logfile',
         )
 
     def init_debug_parsers(self):
@@ -71,11 +71,11 @@ class CLI:
         parsers = (
             subparsers.add_parser(
                 'read',
-                help='Manually read memory data (debugging only).',
+                help='manually read memory data (debugging only)',
             ),
             subparsers.add_parser(
                 'write',
-                help='Manually write memory data (debugging only).',
+                help='manually write memory data (debugging only)',
             )
         )
 
@@ -83,24 +83,24 @@ class CLI:
             parser.add_argument(
                 '-r', '--raw',
                 action='store_true',
-                help='Send raw data, do not convert to hex'
+                help='send raw data, do not convert to hex'
             )
 
             parser.add_argument(
                 'offset',
                 type=int,
-                help='The memory offset',
+                help='the memory offset (unsigned 16-bit integer)',
             )
 
             parser.add_argument(
                 'length',
                 type=int,
-                help='The data length',
+                help='the data length (unsigned 16-bit integer)',
             )
 
         parsers[1].add_argument(
             'data',
-            help='The data'
+            help='the memory data (8-bit unsigned integers or hex value if raw)'
         )
 
     def init_setting_parsers(self):
@@ -108,9 +108,13 @@ class CLI:
         Make the machine settings available to the parser.
         '''
         for argument, setting in self.machine.settings.items():
+
+            doc = setting.__class__.__doc__.strip()
+            doc = doc[0].lower() + doc[1:-1]
+
             setting_parser = self.subparsers.add_parser(
                 argument,
-                help=setting.__class__.__doc__.strip()
+                help=doc,
             )
 
             kwargs = {'nargs': '?'}

@@ -11,7 +11,7 @@ from .base import ChoiceSetting
 
 class Standby(ChoiceSetting):
     '''
-    Is the machine in standby mode.
+    The standby state of the machine.
     '''
     offset = 74
 

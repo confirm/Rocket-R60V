@@ -11,7 +11,7 @@ from .base import ChoiceSetting
 
 class ServiceBoiler(ChoiceSetting):
     '''
-    Is the service boiler on or off.
+    The state of the service boiler.
     '''
     offset = 73
 

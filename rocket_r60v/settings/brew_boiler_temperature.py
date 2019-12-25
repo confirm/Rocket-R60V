@@ -11,7 +11,7 @@ from .base import RangeSetting
 
 class BrewBoilerTemperature(RangeSetting):
     '''
-    The temperature of the brew boiler.
+    The desired temperature of the brew boiler.
     '''
     offset = 2
 

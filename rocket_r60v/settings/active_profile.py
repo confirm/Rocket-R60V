@@ -11,7 +11,7 @@ from .base import ChoiceSetting
 
 class ActiveProfile(ChoiceSetting):
     '''
-    The active profile.
+    The active pressure profile.
     '''
     offset = 71
 
