@@ -80,35 +80,7 @@ Fortunately, the R 60V uses a relatively simple message protocol format.
 I'm not 100% sure, but I think it's simply an interface to read & write its memory.
 I also suppose that the whole logic is built into the original Rocket mobile app itself, and there's no "rich" backend in the machine itself.
 
-Here's an example message which will set the language of the machine to English:
-
-.. code-block::
-
-    w000100010059
-
-+----------+----------+----------+-------------------------------------------------------+
-| Position | Example  |  Usage   |                      Description                      |
-+==========+==========+==========+=======================================================+
-| 1        | ``w``    | Command  | The command, ``r`` for reading, ``w`` for writing     |
-+----------+----------+----------+-------------------------------------------------------+
-| 2 … 5    | ``0001`` | Offset   | The memory offset (i.e. the language in this example) |
-+----------+----------+----------+-------------------------------------------------------+
-| 6 … 9    | ``0001`` | Length   | The data length (i.e. 1 byte)                         |
-+----------+----------+----------+-------------------------------------------------------+
-| 10 … -2  | ``00``   | Data     | The data (i.e. ``00`` = ``English``                   |
-+----------+----------+----------+-------------------------------------------------------+
-| -2 … END | ``59``   | Checksum | The checksum                                          |
-+----------+----------+----------+-------------------------------------------------------+
-
-.. note::
-
-    Please note that these are not "official" terms by Rocket itself.
-    I just reverse engineered everything and tried to use matching terms all across my code base.
-    Next to these terms, I'll make use of the following:
-
-        - Raw Message: The complete message with its checksum (i.e. ``w000100010059``)
-        - Message: The message without its checksum (i.e. ``w0001000100``)
-        - Envelope: The command, offset & length (i.e. ``w00010001``)
+Please have a look at the `Message class in the message module <rocket_r60v/message.py>`_ for more details about the exact message protocol.
 
 Reverse Engineering
 ===================

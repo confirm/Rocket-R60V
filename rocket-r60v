@@ -40,7 +40,8 @@ if __name__ == '__main__':
         if hasattr(setting, 'choices'):
             kwargs['choices'] = setting.choices
 
-        setting_parser.add_argument('value', **kwargs)
+        if hasattr(setting, 'set_cli_value'):
+            setting_parser.add_argument('value', **kwargs)
 
     args = parser.parse_args()
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     try:
         machine.connect()
 
-        if args.value:
+        if hasattr(args, 'value') and args.value:
             setattr(machine, args.setting, args.value)
         else:
             data = getattr(machine, args.setting)

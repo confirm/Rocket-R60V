@@ -1,5 +1,5 @@
 '''
-Auto on setting.
+Timer settings.
 '''
 
 __all__ = (
@@ -9,22 +9,25 @@ __all__ = (
 
 import logging
 
-from .base import Setting
 from rocket_r60v.exceptions import SettingValueError
+
+from .base import WritableSetting
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Timer(Setting):
+class AutoOn(WritableSetting):
     '''
-    Base timer class which handles time based values.
+    The auto on time.
     '''
+    offset = 81
+    length = 2
 
-    def get(self):
+    def get(self):  # pylint: disable=arguments-differ
         '''
         Get the time value from the machine.
 
-        The time is sent in 4 bytes. The first two bytes are the our in hex,
+        The time is sent in 4 bytes. The first two bytes are the hour in hex,
         the second two bytes are the minute in hex.
 
         :return: The time
@@ -35,7 +38,7 @@ class Timer(Setting):
         minute = int(time[2:], 16)
         return f'{hour:02d}:{minute:02d}'
 
-    def set(self, time):
+    def set(self, time):  # pylint: disable=arguments-differ
         '''
         Set the time on the machine.
 
@@ -55,17 +58,9 @@ class Timer(Setting):
             raise SettingValueError(error % time)
 
 
-class AutoOn(Timer):
+class AutoStandby(AutoOn):
     '''
-    The auto on time.
-    '''
-    offset = 81
-    length = 2
-
-
-class AutoStandby(Timer):
-    '''
-    The auto on time.
+    The auto standby time.
     '''
     offset = 83
     length = 2
