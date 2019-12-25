@@ -42,12 +42,13 @@ class ReadOnlySetting:
         '''
         self.machine = machine
 
-    def send(self, command, data=''):
+    def send(self, command, data='', convert_int=True):
         '''
         Send a message to the machine.
 
         :param str command: The command [r|w]
         :param str data: The data
+        :param bool convert_int: Convert data int (base 10) to hex (base 16)
 
         :retrun: The response data
         :rtype: str
@@ -56,7 +57,8 @@ class ReadOnlySetting:
             command=command,
             offset=self.offset,
             length=self.length,
-            data=data
+            data=data,
+            convert_int=convert_int,
         )
 
         return self.machine.send_message(message)
@@ -65,13 +67,18 @@ class ReadOnlySetting:
         '''
         Get the setting value from the machine.
 
-        :param bool convert_int: Convert received hex value (base 16) to int (base 10)
+        :param bool convert_int: Convert received hex data (base 16) to int (base 10)
 
         :return: The setting value
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s…', self.__class__.__name__)
-        data = self.send('r')
+
+        data = self.send(
+            command='r',
+            convert_int=convert_int,
+        )
+
         return int(data, 16) if convert_int else data
 
 
@@ -85,27 +92,34 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
         Set the setting value on the machine.
 
         :param str data: The setting value
-        :param bool convert_int: Convert received int value (base 10) to hex (base 16)
+        :param bool convert_int: Convert data int (base 10) to hex (base 16)
+
+        :return: The received data
+        :rtype: str
 
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
-        if convert_int:
-            length = 2 * self.length
-            data   = f'{data:0{length}X}'
 
         LOGGER.debug('Setting value for %s to "%s"…', self.__class__.__name__, data)
 
-        data = self.send('w', data)
+        data = self.send(
+            command='w',
+            data=data,
+            convert_int=convert_int,
+        )
+
         if data != 'OK':
             error = 'Expected response data was "OK", got "%s" instead'
             LOGGER.error(error, data)
             raise ValidationError(error % data)
 
+        return data
+
     def set_cli_value(self, argument):
         '''
         Parse the CLI argument and set it on the machine.
         '''
-        self.set(argument)
+        return self.set(argument)
 
 
 class ChoiceSetting(WritableSetting):
@@ -155,8 +169,11 @@ class ChoiceSetting(WritableSetting):
             LOGGER.error(error, choice, self.choices)
             raise SettingValueError(error % (choice, self.choices))
 
-        LOGGER.debug('Setting value for %s to choice "%s"…', self.__class__.__name__, choice)
-        super().set(self.choices.index(choice))
+        index = self.choices.index(choice)
+        LOGGER.debug('Selected choice for %s of is "%s", equals to value "%s"…',
+                     self.__class__.__name__, choice, index)
+
+        return super().set(index, *args, **kwargs)
 
 
 class RangeSetting(WritableSetting):
@@ -214,4 +231,4 @@ class RangeSetting(WritableSetting):
 
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
-        super().set(self.validate_value(value), *args, **kwargs)
+        return super().set(self.validate_value(value), *args, **kwargs)

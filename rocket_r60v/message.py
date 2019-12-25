@@ -62,7 +62,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
             - Envelope: The command, offset & length (i.e. ``w00010001``)
     '''
 
-    def __init__(self, command, offset, length, data):
+    def __init__(self, command, offset, length, data='', convert_int=True):
         '''
         The message for the Rocket API.
 
@@ -70,11 +70,15 @@ class Message:  # pylint: disable=too-many-instance-attributes
         :param int offset: The memory offset
         :param int length: The data length
         :param str data: The data
+        :param bool convert_int: Convert ``data`` int (base 10) to hex (base 16)
         '''
+        if data != '' and convert_int:
+            data = f'{data:0{length*2}X}'
+
         self.command     = command
         self.offset      = offset
         self.length      = length
-        self.data        = data
+        self.data        = str(data)[0:(length*2)]
         self.envelope    = self.build_envelope()
         self.message     = self.build_message()
         self.checksum    = self.calculate_checksum(self.message)
