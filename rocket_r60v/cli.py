@@ -23,15 +23,19 @@ class CLI:
 
         self.init_parser()
         self.init_parser_arguments()
-        self.init_debug_parser()
         self.init_setting_parsers()
+        self.init_debug_parsers()
 
     def init_parser(self):
         '''
         Initialise the parser and subparser.
         '''
+        def get_help_formatter(prog):
+            return argparse.HelpFormatter(prog, max_help_position=34, width=120)
+
         self.parser = argparse.ArgumentParser(
             description='Remote control the Rocket R 60V.',
+            formatter_class=get_help_formatter
         )
 
         self.subparsers = self.parser.add_subparsers(
@@ -48,45 +52,55 @@ class CLI:
             action='count',
             default=0,
             dest='verbose',
-            help='verbose mode (-v for warning, -vv for info, -vvv for debug)',
+            help='Verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)',
         )
 
         self.parser.add_argument(
             '-f', '--logfile',
             nargs=1,
             dest='logfile',
-            help='the filename of the logfile',
+            help='The filename of the logfile',
         )
 
-    def init_debug_parser(self):
+    def init_debug_parsers(self):
         '''
-        Initialise the debug parser.
+        Initialise the debug parsers for manual reading & writing data.
         '''
-        parser = self.subparsers.add_parser(
-            'debug',
-            help='Manually send messages for debugging.',
+        subparsers = self.subparsers
+
+        parsers = (
+            subparsers.add_parser(
+                'read',
+                help='Manually read memory data (debugging only).',
+            ),
+            subparsers.add_parser(
+                'write',
+                help='Manually write memory data (debugging only).',
+            )
         )
 
-        parser.add_argument(
-            'offset',
-            type=int,
-            help='Memory offset',
-        )
+        for parser in parsers:
+            parser.add_argument(
+                '-r', '--raw',
+                action='store_true',
+                help='Send raw data, do not convert to hex'
+            )
 
-        parser.add_argument(
-            'length',
-            type=int,
-            nargs='?',
-            default=1,
-            help='Data length',
-        )
+            parser.add_argument(
+                'offset',
+                type=int,
+                help='The memory offset',
+            )
 
-        parser.add_argument(
-            '-d', '--data',
-            type=str,
-            nargs='?',
-            default='',
-            help='The data to write'
+            parser.add_argument(
+                'length',
+                type=int,
+                help='The data length',
+            )
+
+        parsers[1].add_argument(
+            'data',
+            help='The data'
         )
 
     def init_setting_parsers(self):
@@ -114,14 +128,14 @@ class CLI:
 
         logging_config = {
             'format': '%(asctime)s - %(module)s - [%(levelname)s]: %(message)s',
-            'level': 40 - (args.verbose * 10),
+            'level': 50 - args.verbose * 10,
             'filename': args.logfile
         }
         logging.basicConfig(**logging_config)
 
         self.machine.connect()
 
-        if args.action == 'debug':
+        if args.action in ('read', 'write'):
             return self.execute_debug_action()
         else:
             return self.execute_machine_action()
@@ -130,15 +144,21 @@ class CLI:
         '''
         Execute debug action.
         '''
-        args = self.args
-        data = args.data
+        args    = self.args
+        action  = args.action
+        convert = not args.raw
+
+        if action == 'write':
+            data = int(args.data) if convert else args.data
+        else:
+            data = ''
 
         message = Message(
-            command='w' if data else 'r',
+            command=action[0],
             offset=args.offset,
             length=args.length,
             data=data,
-            convert_int=False,
+            convert_int=convert,
         )
 
         return self.machine.send_message(message)
