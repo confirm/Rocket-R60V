@@ -67,14 +67,19 @@ class CLI:
         '''
         Initialise the debug parsers for manual reading & writing data.
         '''
+        self.subparsers.add_parser(
+            'addresses',
+            help='display all implemented memory addresses / settings (debugging)',
+        )
+
         read_parser = self.subparsers.add_parser(
             'read',
-            help='manually read memory data (debugging only)',
+            help='manually read memory data (debugging)',
         )
 
         write_parser = self.subparsers.add_parser(
             'write',
-            help='manually write memory data (debugging only)',
+            help='manually write memory data (debugging)',
         )
 
         for parser in (read_parser, write_parser):
@@ -122,6 +127,23 @@ class CLI:
                 }
                 setting_parser.add_argument('value', **kwargs)
 
+    def display_addresses(self):
+        '''
+        Display all configured memory addresses.
+
+        :return: The memory addresses
+        :rtype: str
+        '''
+        settings = sorted(self.machine.settings.items(), key=lambda x: x[1].address)
+        addresses = 'DEC HEX  LEN  SETTING\n'
+        for name, setting in settings:
+            addresses += f'{setting.address:02d}  {setting.address:#04X} ({setting.length:02d}) {name}\n'
+        return addresses
+
+        # for name, setting in self.machine.settings.items():
+        #     addresses.append((setting.address, name))
+        # return str(sorted(addresses, key=lambda x: x[0]))
+
     def execute(self):
         '''
         Parse the CLI arguments and execute the actions.
@@ -138,39 +160,53 @@ class CLI:
         }
         logging.basicConfig(**logging_config)
 
+        if args.action == 'addresses':
+            return self.display_addresses()
+
         self.machine.connect()
 
         if args.action in ('read', 'write'):
-            return self.execute_debug_action()
+            return getattr(self, f'execute_{args.action}_action')()
+
         return self.execute_machine_action()
 
-    def execute_debug_action(self):
+    def execute_read_action(self):
         '''
-        Execute debug action.
+        Execute the read action.
 
         :return: The response
         :rtype: str
         '''
-        args   = self.args
-        action = args.action
-        encode = action == 'read' or not args.raw
-
-        if action == 'write':
-            data = args.data.split(' ')
-            if encode:
-                data = [int(i) for i in data]
-        else:
-            data = []
-
         message = Message(
-            command=action[0],
-            address=args.address,
-            length=args.length,
-            data=data,
-            encode_data=encode,
+            command='r',
+            address=self.args.address,
+            length=self.args.length,
         )
 
-        return self.machine.send_message(message)
+        return str(self.machine.send_message(message))
+
+    def execute_write_action(self):
+        '''
+        Execute the write action.
+
+        :return: The response
+        :rtype: str
+        '''
+        encode_data = not self.args.raw
+
+        data = self.args.data.split(' ')
+        if encode_data:
+            data = [int(i) for i in data]
+
+        message = Message(
+            command='w',
+            address=self.args.address,
+            length=self.args.length,
+            data=data,
+            encode_data=encode_data
+        )
+
+        return str(self.machine.send_message(message))
 
     def execute_machine_action(self):
         '''
@@ -185,4 +221,4 @@ class CLI:
         if hasattr(args, 'value') and args.value:
             setattr(machine, args.action, args.value)
             return 'OK'
-        return getattr(machine, args.action)
+        return str(getattr(machine, args.action))
