@@ -13,7 +13,7 @@ class WaterFeed(ChoiceSetting):
     '''
     The source of the water feed.
     '''
-    offset = 70
+    address = 70
 
     choices = (
         'HardPlumbed',

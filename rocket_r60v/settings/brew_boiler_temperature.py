@@ -13,6 +13,6 @@ class BrewBoilerTemperature(RangeSetting):
     '''
     The desired temperature of the brew boiler.
     '''
-    offset = 2
+    address = 2
 
     range = (80, 110)

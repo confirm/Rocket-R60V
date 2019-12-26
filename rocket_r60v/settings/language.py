@@ -13,7 +13,7 @@ class Language(ChoiceSetting):
     '''
     The language of the machine.
     '''
-    offset = 1
+    address = 1
 
     choices = (
         'English',

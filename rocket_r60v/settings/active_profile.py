@@ -13,7 +13,7 @@ class ActiveProfile(ChoiceSetting):
     '''
     The active pressure profile.
     '''
-    offset = 71
+    address = 71
 
     choices = (
         'A',

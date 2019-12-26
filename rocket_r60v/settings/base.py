@@ -25,14 +25,14 @@ class ReadOnlySetting:
     length = 1
 
     @property
-    def offset(self):
+    def address(self):
         '''
-        The memory offset.
+        The memory address.
 
-        :return: The memory offset
+        :return: The memory address
         :rtype: int
         '''
-        raise NotImplementedError('Offset property not implemented')
+        raise NotImplementedError('Address property not implemented')
 
     def __init__(self, machine):
         '''
@@ -54,7 +54,7 @@ class ReadOnlySetting:
         '''
         message = Message(
             command=command,
-            offset=self.offset,
+            address=self.address,
             length=self.length,
             data=data,
         )

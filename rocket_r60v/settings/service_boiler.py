@@ -13,7 +13,7 @@ class ServiceBoiler(ChoiceSetting):
     '''
     The state of the service boiler.
     '''
-    offset = 73
+    address = 73
 
     choices = (
         'off',

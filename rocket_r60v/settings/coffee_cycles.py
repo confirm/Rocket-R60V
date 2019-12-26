@@ -14,10 +14,10 @@ class CoffeeCyclesTotal(ReadOnlySetting):
     '''
     The coffee cycles.
     '''
-    offset = 75
+    address = 75
 
 class CoffeeCyclesSubtotal(ReadOnlySetting):
     '''
     The coffee cycles.
     '''
-    offset = 77
+    address = 77

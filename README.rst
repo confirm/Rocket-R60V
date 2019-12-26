@@ -160,7 +160,7 @@ For example, the ``smali/singleton/SettingsSingleton.smali`` contains lines whic
 
     .field private static final INGRESSO_ACQUA:I = 0x46
 
-These are significant static fields which point to a byte address of a specific setting. Fortunately, with a bit knowledge of Italian (or a translator), you found yourself a mapping between the settings and the actual memory offsets. The offsets are 16bit unsigned integers, encoded in uppercase hex characters.
+These are significant static fields which point to a byte address of a specific setting. Fortunately, with a bit knowledge of Italian (or a translator), you found yourself a mapping between the settings and the actual memory addresses. The addresses are 16bit unsigned integers, encoded in uppercase hex characters.
 
 Debugging with the rocket-r60v CLI tool
 ---------------------------------------
@@ -169,10 +169,10 @@ You can read any memory address by using the ``rocket-r60v`` CLI tool:
 
 .. code-block::
 
-    usage: rocket-r60v read [-h] offset length
+    usage: rocket-r60v read [-h] address length
 
     positional arguments:
-      offset      the memory offset (unsigned 16-bit integer)
+      address     the memory address (unsigned 16-bit integer)
       length      the data length (unsigned 16-bit integer)
 
     optional arguments:
@@ -182,10 +182,10 @@ There's also an option for writing (use with caution):
 
 .. code-block::
 
-    usage: rocket-r60v write [-h] [-r] offset length data
+    usage: rocket-r60v write [-h] [-r] address length data
 
     positional arguments:
-      offset      the memory offset (unsigned 16-bit integer)
+      address     the memory address (unsigned 16-bit integer)
       length      the data length (unsigned 16-bit integer)
       data        the memory data (8-bit unsigned integers or hex value if raw)
 

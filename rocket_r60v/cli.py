@@ -79,9 +79,9 @@ class CLI:
 
         for parser in (read_parser, write_parser):
             parser.add_argument(
-                'offset',
+                'address',
                 type=int,
-                help='the memory offset (unsigned 16-bit integer)',
+                help='the memory address (unsigned 16-bit integer)',
             )
 
             parser.add_argument(
@@ -164,7 +164,7 @@ class CLI:
 
         message = Message(
             command=action[0],
-            offset=args.offset,
+            address=args.address,
             length=args.length,
             data=data,
             encode_data=encode,

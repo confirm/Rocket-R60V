@@ -20,7 +20,7 @@ class AutoOn(WritableSetting):
     '''
     The auto on time.
     '''
-    offset = 81
+    address = 81
     length = 2
 
     def get(self):  # pylint: disable=arguments-differ
@@ -60,5 +60,5 @@ class AutoStandby(AutoOn):
     '''
     The auto standby time.
     '''
-    offset = 83
+    address = 83
     length = 2

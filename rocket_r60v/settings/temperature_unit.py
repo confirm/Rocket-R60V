@@ -13,7 +13,7 @@ class TemperatureUnit(ChoiceSetting):
     '''
     The temperature unit.
     '''
-    offset = 0
+    address = 0
 
     choices = (
         'Celsius',

@@ -33,7 +33,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
     |          |          | Uses ``r`` (``0x72``) for reading,          |          |
     |          |          | or ``w`` (``0x77``) for writing.            |          |
     +----------+----------+---------------------------------------------+----------+
-    | 2 … 5    | Offset   | The memory offset.                          | ``0001`` |
+    | 2 … 5    | Address  | The memory address.                         | ``0001`` |
     |          |          | Uses an 16-bit unsigned integer,            |          |
     |          |          | encoded as uppercase hex value.             |          |
     +----------+----------+---------------------------------------------+----------+
@@ -59,15 +59,15 @@ class Message:  # pylint: disable=too-many-instance-attributes
 
             - Raw Message: The complete message with its checksum (i.e. ``w000100010059``)
             - Message: The message without its checksum (i.e. ``w0001000100``)
-            - Envelope: The command, offset & length (i.e. ``w00010001``)
+            - Envelope: The command, address & length (i.e. ``w00010001``)
     '''
 
-    def __init__(self, command, offset, length, data=[], encode_data=True):  # pylint: disable=too-many-arguments
+    def __init__(self, command, address, length, data=[], encode_data=True):  # pylint: disable=too-many-arguments
         '''
         The message for the Rocket API.
 
         :param str command: The command [r|w]
-        :param int offset: The memory offset
+        :param int address: The memory address
         :param int length: The data length
         :param list data: The data sequence
         :param bool encode_data: Encode ``data`` sequence integers (base 10) to hex (base 16)
@@ -76,7 +76,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
             data = (f'{x:02X}' for x in data)
 
         self.command     = command
-        self.offset      = offset
+        self.address     = address
         self.length      = length
         self.data        = ''.join(data)[0:(length * 2)]
         self.envelope    = self.build_envelope()
@@ -138,12 +138,12 @@ class Message:  # pylint: disable=too-many-instance-attributes
         Build the message envelope.
 
         The envelope is the first 9 bytes of the message and contains the
-        command (read or write), offset & length of the message.
+        command (read or write), address & length of the message.
 
         :return: The envelope
         :rtype: str
         '''
-        envelope = f'{self.command}{self.offset:04X}{self.length:04X}'
+        envelope = f'{self.command}{self.address:04X}{self.length:04X}'
         LOGGER.debug('Message envelope is "%s"', envelope)
         return envelope
 
