@@ -27,7 +27,6 @@ class CLI:
         self.init_setting_parsers()
         self.init_debug_parsers()
 
-
     def init_parser(self):
         '''
         Initialise the parser and subparser.
@@ -68,26 +67,17 @@ class CLI:
         '''
         Initialise the debug parsers for manual reading & writing data.
         '''
-        subparsers = self.subparsers
-
-        parsers = (
-            subparsers.add_parser(
-                'read',
-                help='manually read memory data (debugging only)',
-            ),
-            subparsers.add_parser(
-                'write',
-                help='manually write memory data (debugging only)',
-            )
+        read_parser = self.subparsers.add_parser(
+            'read',
+            help='manually read memory data (debugging only)',
         )
 
-        for parser in parsers:
-            parser.add_argument(
-                '-r', '--raw',
-                action='store_true',
-                help='send raw data, do not convert to hex'
-            )
+        write_parser = self.subparsers.add_parser(
+            'write',
+            help='manually write memory data (debugging only)',
+        )
 
+        for parser in (read_parser, write_parser):
             parser.add_argument(
                 'offset',
                 type=int,
@@ -100,7 +90,13 @@ class CLI:
                 help='the data length (unsigned 16-bit integer)',
             )
 
-        parsers[1].add_argument(
+        write_parser.add_argument(
+            '-r', '--raw',
+            action='store_true',
+            help='send raw data, do not encode data to hex'
+        )
+
+        write_parser.add_argument(
             'data',
             help='the memory data (8-bit unsigned integers or hex value if raw)'
         )
@@ -109,26 +105,29 @@ class CLI:
         '''
         Make the machine settings available to the parser.
         '''
-        for argument, setting in self.machine.settings.items():
+        for name, setting in self.machine.settings.items():
 
             doc = setting.__class__.__doc__.strip()
             doc = doc[0].lower() + doc[1:-1]
 
             setting_parser = self.subparsers.add_parser(
-                argument,
+                name,
                 help=doc,
             )
 
-            kwargs = {'nargs': '?'}
-            if hasattr(setting, 'choices'):
-                kwargs['choices'] = setting.choices
-
-            if hasattr(setting, 'set_cli_value'):
+            if hasattr(setting, 'set'):
+                kwargs = {
+                    'nargs': '?',
+                    'choices': setting.choices if hasattr(setting, 'choices') else None
+                }
                 setting_parser.add_argument('value', **kwargs)
 
     def execute(self):
         '''
         Parse the CLI arguments and execute the actions.
+
+        :return: The response
+        :rtype: str
         '''
         args = self.args = self.parser.parse_args()
 
@@ -148,22 +147,27 @@ class CLI:
     def execute_debug_action(self):
         '''
         Execute debug action.
+
+        :return: The response
+        :rtype: str
         '''
-        args    = self.args
-        action  = args.action
-        convert = not args.raw
+        args   = self.args
+        action = args.action
+        encode = action == 'read' or not args.raw
 
         if action == 'write':
-            data = int(args.data) if convert else args.data
+            data = args.data.split(' ')
+            if encode:
+                data = [int(i) for i in data]
         else:
-            data = ''
+            data = []
 
         message = Message(
             command=action[0],
             offset=args.offset,
             length=args.length,
             data=data,
-            convert_int=convert,
+            encode_data=encode,
         )
 
         return self.machine.send_message(message)
@@ -171,6 +175,9 @@ class CLI:
     def execute_machine_action(self):
         '''
         Execute machine action.
+
+        :return: The response
+        :rtype: str
         '''
         args    = self.args
         machine = self.machine

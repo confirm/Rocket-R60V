@@ -42,13 +42,13 @@ class ReadOnlySetting:
         '''
         self.machine = machine
 
-    def send(self, command, data='', convert_int=True):
+    def send(self, command, data=[], encode_data=True):
         '''
         Send a message to the machine.
 
         :param str command: The command [r|w]
-        :param str data: The data
-        :param bool convert_int: Convert data int (base 10) to hex (base 16)
+        :param list data: The data sequence
+        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :retrun: The response data
         :rtype: str
@@ -58,28 +58,26 @@ class ReadOnlySetting:
             offset=self.offset,
             length=self.length,
             data=data,
-            convert_int=convert_int,
+            encode_data=encode_data,
         )
 
         return self.machine.send_message(message)
 
-    def get(self, convert_int=True):
+    def get(self, encode_data=True):
         '''
         Get the setting value from the machine.
 
-        :param bool convert_int: Convert received hex data (base 16) to int (base 10)
+        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :return: The setting value
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s…', self.__class__.__name__)
 
-        data = self.send(
+        return self.send(
             command='r',
-            convert_int=convert_int,
+            encode_data=encode_data,
         )
-
-        return int(data, 16) if convert_int else data
 
 
 class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
@@ -87,12 +85,12 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
     A writable setting from which all other writable settings should inherit.
     '''
 
-    def set(self, data, convert_int=True):
+    def set(self, data, encode_data=True):
         '''
         Set the setting value on the machine.
 
-        :param str data: The setting value
-        :param bool convert_int: Convert data int (base 10) to hex (base 16)
+        :param list data: The data sequence
+        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :return: The received data
         :rtype: str
@@ -105,8 +103,8 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
         data = self.send(
             command='w',
             data=data,
-            convert_int=convert_int,
-        )
+            encode_data=encode_data,
+        )[0]
 
         if data != 'OK':
             error = 'Expected response data was "OK", got "%s" instead'
@@ -114,12 +112,6 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
             raise ValidationError(error % data)
 
         return data
-
-    def set_cli_value(self, argument):
-        '''
-        Parse the CLI argument and set it on the machine.
-        '''
-        return self.set(argument)
 
 
 class ChoiceSetting(WritableSetting):
@@ -147,7 +139,7 @@ class ChoiceSetting(WritableSetting):
         :rtype: str
         '''
         try:
-            index  = super().get(*args, **kwargs)
+            index  = super().get(*args, **kwargs)[0]
             choice = self.choices[index]
             LOGGER.info('Choice of %s is "%s"', self.__class__.__name__, choice)
             return choice
@@ -173,7 +165,7 @@ class ChoiceSetting(WritableSetting):
         LOGGER.debug('Selected choice for %s of is "%s", equals to value "%s"…',
                      self.__class__.__name__, choice, index)
 
-        return super().set(index, *args, **kwargs)
+        return super().set([index], *args, **kwargs)
 
 
 class RangeSetting(WritableSetting):
@@ -221,7 +213,7 @@ class RangeSetting(WritableSetting):
         :return: The value
         :rtype: str
         '''
-        return self.validate_value(super().get(*args, **kwargs))
+        return self.validate_value(super().get(*args, **kwargs)[0])
 
     def set(self, value, *args, **kwargs):  # pylint: disable=arguments-differ
         '''
@@ -231,4 +223,5 @@ class RangeSetting(WritableSetting):
 
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
-        return super().set(self.validate_value(value), *args, **kwargs)
+        value = int(value)
+        return super().set([self.validate_value(value)], *args, **kwargs)

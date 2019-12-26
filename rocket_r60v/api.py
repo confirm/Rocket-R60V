@@ -10,6 +10,7 @@ import logging
 import socket
 
 from .exceptions import RocketConnectionError
+from .message import Message
 
 LOGGER = logging.getLogger(__name__)
 
@@ -103,8 +104,9 @@ class API:
 
             message.validate_response(response)
 
-            data = response[9:-2]
+            data = Message.decode_data(response)
             LOGGER.info('Received message data is "%s"', data)
+
             return data
 
         except socket.timeout:

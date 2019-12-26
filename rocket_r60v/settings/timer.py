@@ -33,9 +33,7 @@ class AutoOn(WritableSetting):
         :return: The time
         :rtype: str
         '''
-        time   = super().get(convert_int=False)
-        hour   = int(time[:2], 16)
-        minute = int(time[2:], 16)
+        hour, minute = super().get()
         return f'{hour:02d}:{minute:02d}'
 
     def set(self, time):  # pylint: disable=arguments-differ
@@ -50,7 +48,7 @@ class AutoOn(WritableSetting):
             minute       = int(minute)
             assert 0 <= hour <= 23
             assert 0 <= minute <= 59
-            super().set(data=f'{hour:02X}{minute:02X}', convert_int=False)
+            return super().set([hour, minute])
 
         except (ValueError, AssertionError):
             error = 'Value "%s" is not in valid time (HH:MM)'
