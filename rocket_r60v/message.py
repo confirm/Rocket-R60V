@@ -19,47 +19,8 @@ class Message:  # pylint: disable=too-many-instance-attributes
     A single message which meets the requirements of the Rocket message
     protocol.
 
-    Here's an example message which will set the language of the machine to
-    English:
-
-    .. code-block::
-
-        w000100010059
-
-    +----------+----------+---------------------------------------------+----------+
-    | Position |  Usage   |                 Description                 | Example  |
-    +==========+==========+=============================================+==========+
-    | 1        | Command  | The command.                                | ``w``    |
-    |          |          | Uses ``r`` (``0x72``) for reading,          |          |
-    |          |          | or ``w`` (``0x77``) for writing.            |          |
-    +----------+----------+---------------------------------------------+----------+
-    | 2 … 5    | Address  | The memory address.                         | ``0001`` |
-    |          |          | Uses an 16-bit unsigned integer,            |          |
-    |          |          | encoded as uppercase hex value.             |          |
-    +----------+----------+---------------------------------------------+----------+
-    | 6 … 9    | Length   | The data length.                            | ``0001`` |
-    |          |          | Uses an 16-bit unsigned integer,            |          |
-    |          |          | encoded as uppercase hex value.             |          |
-    +----------+----------+---------------------------------------------+----------+
-    | 10 … -2  | Data     | The data itself.                            | ``00``   |
-    |          |          | Uses a sequence of 8-bit unsigned integers, |          |
-    |          |          | all encoded as uppercase hex values.        |          |
-    +----------+----------+---------------------------------------------+----------+
-    | -2 … END | Checksum | The checksum.                               | ``59``   |
-    |          |          | Modulo 256 of the sum of all bytes,         |          |
-    |          |          | encoded as uppercase hex value.             |          |
-    +----------+----------+---------------------------------------------+----------+
-
-    .. note::
-
-        Please note that these are not "official" terms by Rocket itself.
-        I just reverse engineered everything and tried to use matching terms all
-        across my code base. Next to these terms, I'll make use of the
-        following ones:
-
-            - Raw Message: The complete message with its checksum (i.e. ``w000100010059``)
-            - Message: The message without its checksum (i.e. ``w0001000100``)
-            - Envelope: The command, address & length (i.e. ``w00010001``)
+    Please have a look at the REVERSE_ENGINEERING.rst document for more
+    informations about the Rocket message protocol.
     '''
 
     def __init__(self, command, address, length, data=[], encode_data=True):  # pylint: disable=too-many-arguments
