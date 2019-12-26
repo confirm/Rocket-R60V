@@ -68,7 +68,7 @@ class ReadOnlySetting:
         :return: The setting value
         :rtype: mixed
         '''
-        LOGGER.debug('Getting value for %s…', self.__class__.__name__)
+        LOGGER.debug('Getting value for %s from machine…', self.__class__.__name__)
         return self.send(command='r')
 
 
@@ -89,7 +89,7 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
         :raises rocket.exceptions.ValidationError: When response data isn't "OK"
         '''
 
-        LOGGER.debug('Setting value for %s to "%s"…', self.__class__.__name__, data)
+        LOGGER.debug('Setting value for %s on machine to "%s"…', self.__class__.__name__, data)
 
         data = self.send(command='w', data=data)
 

@@ -95,23 +95,24 @@ class Message:  # pylint: disable=too-many-instance-attributes
         :return: The data list
         :rtype: list
         '''
-        LOGGER.debug('Decoding data of message "%s"…' % message)
+        length  = int(message[5:9], 16)
+        encoded = message[9:(9 + length * 2)]
+        decoded = []
 
-        data   = []
-        length = int(message[5:9], 16)
+        LOGGER.debug('Encoded data is "%s"' % encoded)
 
-        if message[9:11] == 'OK':
+        if encoded[:2] == 'OK':
             LOGGER.debug('Decoding skipped as "OK" was returned…')
             return ['OK']
 
         for i in range(0, length * 2, 2):
-            start = 9 + i
+            start = i
             end   = start + 2
-            data.append(int(message[start:end], 16))
+            decoded.append(int(encoded[start:end], 16))
 
-        LOGGER.debug('Decoded data is "%s"' % data)
+        LOGGER.debug('Decoded data is "%s"' % decoded)
 
-        return data
+        return decoded
 
     @classmethod
     def calculate_checksum(cls, message):

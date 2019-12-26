@@ -96,7 +96,7 @@ class API:
         :return: The received data
         :rtype: str
         '''
-        LOGGER.debug('Sending message "%s", attempt %d…', message, attempt)
+        LOGGER.debug('Sending "%s", attempt %d…', message, attempt)
 
         try:
             self.socket.send(message.encode())
