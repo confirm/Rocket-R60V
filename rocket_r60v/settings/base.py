@@ -42,12 +42,13 @@ class ReadOnlySetting:
         '''
         self.machine = machine
 
-    def send(self, command, data=[]):
+    def send(self, command, data=None):
         '''
         Send a message to the machine.
 
         :param str command: The command [r|w]
-        :param list data: The data sequence
+        :param data: The data sequence
+        :rtype data: None or list
 
         :retrun: The response data
         :rtype: str

@@ -23,17 +23,20 @@ class Message:  # pylint: disable=too-many-instance-attributes
     informations about the Rocket message protocol.
     '''
 
-    def __init__(self, command, address, length, data=[], encode_data=True):  # pylint: disable=too-many-arguments
+    def __init__(self, command, address, length, data=None, encode_data=True):  # pylint: disable=too-many-arguments
         '''
         The message for the Rocket API.
 
         :param str command: The command [r|w]
         :param int address: The memory address
         :param int length: The data length
-        :param list data: The data sequence
+        :param data: The data sequence
+        :type data: None or list
         :param bool encode_data: Encode ``data`` sequence integers (base 10) to hex (base 16)
         '''
-        if encode_data:
+        if data is None:
+            data = []
+        elif encode_data:
             data = (f'{x:02X}' for x in data)
 
         self.command     = command
@@ -60,7 +63,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
         encoded = message[9:(9 + length * 2)]
         decoded = []
 
-        LOGGER.debug('Encoded data is "%s"' % encoded)
+        LOGGER.debug('Encoded data is "%s"', encoded)
 
         if encoded[:2] == 'OK':
             LOGGER.debug('Decoding skipped as "OK" was returned…')
@@ -71,7 +74,7 @@ class Message:  # pylint: disable=too-many-instance-attributes
             end   = start + 2
             decoded.append(int(encoded[start:end], 16))
 
-        LOGGER.debug('Decoded data is "%s"' % decoded)
+        LOGGER.debug('Decoded data is "%s"', decoded)
 
         return decoded
 

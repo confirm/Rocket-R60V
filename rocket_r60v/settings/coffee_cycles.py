@@ -16,6 +16,7 @@ class CoffeeCyclesTotal(ReadOnlySetting):
     '''
     address = 75
 
+
 class CoffeeCyclesSubtotal(ReadOnlySetting):
     '''
     The coffee cycles.

@@ -11,7 +11,7 @@ It provides a proper API and a CLI tool to read & write settings on the machine.
 Why this API
 ------------
 
-Rocket provides its own `iOS <https://apps.apple.com/us/app/rocket-r60v/id1073102815>`_ & `Android <https://play.google.com/store/apps/details?id=com.gicar.Rocket_R60V>`_ apps. However, IMHO the apps are complete rubbish (bad engineering par excellence) and work bad or sometimes not at all. The app reviews tell the same story.
+Rocket provides its own `iOS <https://apps.apple.com/us/app/rocket-r60v/id1073102815>`_ & `Android <https://play.google.com/store/apps/details?id=com.gicar.Rocket_R60V>`_ apps. However, IMHO the apps are complete rubbish (bad engineering par excellence) and don't work properly. The app reviews tell the same story.
 
 Annoyed and frustrated by the origin apps, I did some research & reverse engineering.
 

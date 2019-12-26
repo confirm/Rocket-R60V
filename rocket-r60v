@@ -4,8 +4,6 @@
 CLI script for the Rocket R 60V.
 '''
 
-import argparse
-import logging
 import sys
 
 from rocket_r60v.machine import Machine
