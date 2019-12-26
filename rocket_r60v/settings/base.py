@@ -42,13 +42,12 @@ class ReadOnlySetting:
         '''
         self.machine = machine
 
-    def send(self, command, data=[], encode_data=True):
+    def send(self, command, data=[]):
         '''
         Send a message to the machine.
 
         :param str command: The command [r|w]
         :param list data: The data sequence
-        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :retrun: The response data
         :rtype: str
@@ -58,26 +57,19 @@ class ReadOnlySetting:
             offset=self.offset,
             length=self.length,
             data=data,
-            encode_data=encode_data,
         )
 
         return self.machine.send_message(message)
 
-    def get(self, encode_data=True):
+    def get(self):
         '''
         Get the setting value from the machine.
-
-        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :return: The setting value
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s…', self.__class__.__name__)
-
-        return self.send(
-            command='r',
-            encode_data=encode_data,
-        )
+        return self.send(command='r')
 
 
 class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
@@ -85,12 +77,11 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
     A writable setting from which all other writable settings should inherit.
     '''
 
-    def set(self, data, encode_data=True):
+    def set(self, data):
         '''
         Set the setting value on the machine.
 
         :param list data: The data sequence
-        :param bool encode_data: Convert data int (base 10) to hex (base 16)
 
         :return: The received data
         :rtype: str
@@ -100,18 +91,14 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
 
         LOGGER.debug('Setting value for %s to "%s"…', self.__class__.__name__, data)
 
-        data = self.send(
-            command='w',
-            data=data,
-            encode_data=encode_data,
-        )[0]
+        data = self.send(command='w', data=data)
 
-        if data != 'OK':
+        if data[0] != 'OK':
             error = 'Expected response data was "OK", got "%s" instead'
             LOGGER.error(error, data)
             raise ValidationError(error % data)
 
-        return data
+        return data[0]
 
 
 class ChoiceSetting(WritableSetting):
