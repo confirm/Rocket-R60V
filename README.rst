@@ -20,17 +20,20 @@ Why Python
 
 I use Python simply because I like it and it allows me to get shit done. 
 
-Installation
-============
+Usage
+=====
 
-The Rocket R 60V API can be either installed from source (i.e. downloading or cloning this repository) or via ``pip``:
+Installation
+------------
+
+The Rocket R 60V API can either installed from source (i.e. downloading or cloning this repository) or via ``pip``:
 
 .. code-block:: bash
 
     pip install rocket-r60v
 
 CLI command
-===========
+-----------
 
 This package provides a CLI command called ``rocket-r60v`` to communicate with the machine.
 To display the available commands, use the ``--help`` flag:
@@ -48,7 +51,29 @@ For example, to query the language you can use:
 
 If you want to change the language, you can use:
 
+.. code-block:: bash
+
     rocket-r60v language English
+
+Python API
+----------
+
+The Python API can be used like this:
+
+.. code-block:: python
+
+    from rocket_r60v.machine import Machine
+
+    machine = Machine()
+    machine.connect()
+
+    # Get language unit from machine.
+    print(machine.language)
+
+    # Set language unit on machine.
+    machine.temperature_unit = 'English'
+
+All available settings can be displayed via CLI command ``rocket-r60v --help`` or by inspecting the `settings module <rocket_r60v/settings/__init__.py>`_.
 
 Communication
 =============
@@ -85,6 +110,12 @@ Please have a look at the `Message class in the message module <rocket_r60v/mess
 Reverse Engineering
 ===================
 
+jffry's library
+---------------
+
+Another GitHub user called `jffry <https://github.com/jffry>`_ already did `another client API written in NodeJS <https://github.com/jffry/rocket-r60v>`_ for the Rocket R 60V.  
+Kudos to his excellent `reverse engineering <https://github.com/jffry/rocket-r60v/blob/master/doc/Reverse%20Engineering.md>`_ and for publishing his findings!
+
 iOS app communication
 ---------------------
 
@@ -106,7 +137,59 @@ This is achieved by:
 
 There's an excellent tutorial by `pentest_it <https://medium.com/@pentest_it>`_ available which describes `How to capture network traffic from iPhone with tcpdump <https://medium.com/@pentest_it/how-to-capture-network-traffic-from-iphone-with-tcpdump-acd11e030f08>`_.
 
-jffry's library
----------------
+Android APK decode
+------------------
 
-Another GitHub user called `jffry <https://github.com/jffry>`_ already did `another client API written in NodeJS <https://github.com/jffry/rocket-r60v>`_ for the Rocket R 60V. Kudos to his reverse engineering & findings!
+Download the `Rocket Espresso R 60V android app <https://play.google.com/store/apps/details?id=com.gicar.Rocket_R60V>`_ to your PC.  
+There are several ways to do this, either by installing it on your Android phone or by downloading it directly from the Google Play store (just google for it).
+
+Then install the `Apktool <https://github.com/iBotPeaches/Apktool>`_ to decode the APK. There's a `Homebrew Formulae <https://formulae.brew.sh/formula/apktool>`_ available for Mac OS X.
+
+When you've downloaded the Android app and installed apktool, you can decode the app by running:
+
+.. code-block::
+
+    apktool decode -o rocket_app {Rocket apk file}
+
+There should now be a ``rocket/`` directory with the decoded app. 
+When browsing through the smali files, you can find hints how to access different data of the machine.
+
+For example, the ``smali/singleton/SettingsSingleton.smali`` contains lines which look like this:
+
+.. code-block::
+
+    .field private static final INGRESSO_ACQUA:I = 0x46
+
+These are significant static fields which point to a byte address of a specific setting. Fortunately, with a bit knowledge of Italian (or a translator), you found yourself a mapping between the settings and the actual memory offsets. The offsets are 16bit unsigned integers, encoded in uppercase hex characters.
+
+Debugging with the rocket-r60v CLI tool
+---------------------------------------
+
+You can read any memory address by using the ``rocket-r60v`` CLI tool:
+
+.. code-block::
+
+    usage: rocket-r60v read [-h] offset length
+
+    positional arguments:
+      offset      the memory offset (unsigned 16-bit integer)
+      length      the data length (unsigned 16-bit integer)
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+There's also an option for writing (use with caution):
+
+.. code-block::
+
+    usage: rocket-r60v write [-h] [-r] offset length data
+
+    positional arguments:
+      offset      the memory offset (unsigned 16-bit integer)
+      length      the data length (unsigned 16-bit integer)
+      data        the memory data (8-bit unsigned integers or hex value if raw)
+
+    optional arguments:
+      -h, --help  show this help message and exit
+      -r, --raw   send raw data, do not encode data to hex
+    
