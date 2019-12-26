@@ -115,18 +115,18 @@ Android APK decode
 ------------------
 
 Download the `Rocket Espresso R 60V android app <https://play.google.com/store/apps/details?id=com.gicar.Rocket_R60V>`_ to your PC.  
-There are several ways to do this, either by installing it on your Android phone or by downloading it directly from the Google Play store. Just google for it or use the `APK Downloader by APK.Support <https://apk.support/apk-downloader>`_.
+There are several ways to do this, either by installing it on your Android phone and extracting it from there, or by downloading it directly from the Google Play store. Just google for it or use the `APK Downloader by APK.Support <https://apk.support/apk-downloader>`_.
 
-Then install the `Apktool <https://github.com/iBotPeaches/Apktool>`_ to decode the APK. There's a `Homebrew Formulae <https://formulae.brew.sh/formula/apktool>`_ available for Mac OS X.
+Install the `Apktool <https://github.com/iBotPeaches/Apktool>`_ to decode the APK. There's a `Homebrew Formulae <https://formulae.brew.sh/formula/apktool>`_ available for Mac OS X.
 
-When you've downloaded the Android app and installed apktool, you can decode the app by running:
+When you've downloaded the Android app and installed ``apktool``, you can decode the app by running:
 
 .. code-block::
 
     apktool decode -o rocket_app {Rocket apk file}
 
 There should now be a ``rocket/`` directory with the decoded app. 
-When browsing through the smali files, you can find hints how to access different data of the machine.
+When browsing through the ``smali`` files, you can find hints how to access different data of the machine.
 
 For example, the ``smali/singleton/SettingsSingleton.smali`` contains lines which look like this:
 
@@ -136,7 +136,7 @@ For example, the ``smali/singleton/SettingsSingleton.smali`` contains lines whic
 
 These are significant static fields which point to a byte address of a specific setting. Fortunately, with a bit knowledge of Italian (or a translator), you found yourself a mapping between the settings and the actual memory addresses. The addresses are 16bit unsigned integers, encoded in uppercase hex characters.
 
-Of course, a proper grep like ``grep -R 'ADDRESS:I'`` can probably disclose all available addresses:
+A bit of grepping like ``grep -R 'ADDRESS:I'`` can disclose even more addresses:
 
 .. code-block:: 
 
@@ -210,6 +210,14 @@ Of course, a proper grep like ``grep -R 'ADDRESS:I'`` can probably disclose all 
     smali/singleton/TimerSingleton.smali:.field public static final ORA_AUTO_ON_ADDRESS:I = 0x51
     smali/singleton/TextSingleton.smali:.field public static final NOME_ADDRESS:I = 0x6
     smali/singleton/TextSingleton.smali:.field public static final NUMERO_ADDRESS:I = 0x17
+
+.. note::
+
+    Please note that the Android app is developed in Java. Fortunately, Java is an interpreted language and thus the shipped bytecode can be decoded back into "readable" source code.
+
+    Unfortunately, most iOS apps are compiled into machine code. The Rocket iOS app is no exception to this. There's only compiled machine code and no bytecode available. Decompiling machine code back into "readable" source code (e.g. Objectiv-C or Swift) is a much harder task. It would even be easier to disassembling it into assembly, but even that is a hard thing to do and hard to reverse engineer.
+
+    Therefor I'd stick with the Java bytecode / APK and decode it for reverse engineering of the app / protocol. 
 
 jffry's library
 ---------------
