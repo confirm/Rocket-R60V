@@ -12,7 +12,6 @@ import logging
 from unittest import main
 
 from rocket_r60v.settings import Language
-from rocket_r60v.exceptions import SettingValueError
 
 from .base import TestSetting
 
