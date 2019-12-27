@@ -4,11 +4,14 @@
 Unit test cases for the Rocket machine module.
 '''
 
+import logging
 from unittest import TestCase, main
 from unittest.mock import patch
 
 from rocket_r60v.machine import Machine
 from rocket_r60v.exceptions import RocketConnectionError
+
+logging.disable()
 
 
 class TestMachine(TestCase):
