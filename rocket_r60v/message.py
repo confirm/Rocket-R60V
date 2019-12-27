@@ -9,7 +9,7 @@ __all__ = (
 import logging
 from functools import reduce
 
-from .exceptions import ValidationError
+from .exceptions import ValidationError, MessageLengthError
 
 LOGGER = logging.getLogger()
 
@@ -27,26 +27,51 @@ class Message:  # pylint: disable=too-many-instance-attributes
         '''
         The message for the Rocket API.
 
-        :param str command: The command [r|w]
+        :param str command: The commanfd [r|w]
         :param int address: The memory address
         :param int length: The data length
         :param data: The data sequence
-        :type data: None or list
+        :type data: None, str, int or list
         :param bool encode_data: Encode ``data`` sequence integers (base 10) to hex (base 16)
         '''
-        if data is None:
-            data = []
-        elif encode_data:
-            data = (f'{x:02X}' for x in data)
+        if encode_data:
+            data = self.encode_data(data)
+
+        if command == 'w' and len(data) != length * 2:
+            error = 'Invalid length (%d) defiend for data "%s"'
+            LOGGER.error(error, length, data)
+            raise MessageLengthError(error % (length, data))
 
         self.command     = command
         self.address     = address
         self.length      = length
-        self.data        = ''.join(data)[0:(length * 2)]
+        self.data        = data
         self.envelope    = self.build_envelope()
         self.message     = self.build_message()
         self.checksum    = self.calculate_checksum(self.message)
         self.raw_message = self.build_raw_message()
+
+    @classmethod
+    def encode_data(cls, data):
+        '''
+        Encode the data sequence into a message compitable sequence of hex
+        values (base 16).
+
+        :param data: The data sequence
+        :type data: None, str, int or list
+
+        :return: The data string
+        :rtype: str
+        '''
+        if data is None:
+            return ''
+
+        if isinstance(data, str):
+            data = [int(data)]
+        elif isinstance(data, int):
+            data = [data]
+
+        return ''.join((f'{x:02X}' for x in data))
 
     @classmethod
     def decode_data(cls, message):

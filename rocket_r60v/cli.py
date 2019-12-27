@@ -188,18 +188,12 @@ class CLI:
         :return: The response
         :rtype: str
         '''
-        encode_data = not self.args.raw
-
-        data = self.args.data.split(' ')
-        if encode_data:
-            data = [int(i) for i in data]
-
         message = Message(
             command='w',
             address=self.args.address,
             length=self.args.length,
-            data=data,
-            encode_data=encode_data
+            data=self.args.data,
+            encode_data=(not self.args.raw)
         )
 
         return str(self.machine.send_message(message))
