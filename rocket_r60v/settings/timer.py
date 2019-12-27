@@ -4,7 +4,7 @@ Timer settings.
 
 __all__ = (
     'AutoOn',
-    'AutoStandby',
+    'AutoOff',
 )
 
 import logging
@@ -56,9 +56,9 @@ class AutoOn(WritableSetting):
             raise SettingValueError(error % time)
 
 
-class AutoStandby(AutoOn):
+class AutoOff(AutoOn):
     '''
-    The auto standby time.
+    The auto off (standby) time.
     '''
     address = 83
     length = 2
