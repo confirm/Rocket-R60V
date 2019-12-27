@@ -83,7 +83,7 @@ The Rocket R 60V machine will open a wireless network:
 - SSID: ``RocketEspresso``
 - Passphrase: ``RocketR60V``
 
-A wireless client can then connect to the wireless network and should get a DHCP lease in the `192.168.1.0/24` subnet. 
+A wireless client can then connect to the wireless network and should get a DHCP lease in the ``192.168.1.0/24`` subnet. 
 From there on, you should be able to use the API.
 
 Reverse Engineering
