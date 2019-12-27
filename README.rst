@@ -38,10 +38,54 @@ CLI command
 This package provides a CLI command called ``rocket-r60v`` to communicate with the machine.
 To display the available commands, use the ``--help`` flag:
 
-.. code-block:: bash
+.. code-block::
 
     rocket-r60v --help
-    rocket-r60v {setting} --help
+    usage: rocket-r60v [-h] [-v] [-f LOGFILE]
+                       {active_profile,auto_off,auto_on,brew_boiler_temperature,language,profile_a,profile_b,profile_c,service_boiler,service_boiler_temperature,standby,temperature_unit,total_coffee_count,water_feed,addresses,read,write}
+                       ...
+
+    Remote control the Rocket R 60V.
+
+    positional arguments:
+      {active_profile,auto_off,auto_on,brew_boiler_temperature,language,profile_a,profile_b,profile_c,service_boiler,service_boiler_temperature,standby,temperature_unit,total_coffee_count,water_feed,addresses,read,write}
+        active_profile                the active pressure profile
+        auto_off                      the auto off (standby) time
+        auto_on                       the auto on time
+        brew_boiler_temperature       the desired temperature of the brew boiler
+        language                      the language of the machine
+        profile_a                     the pressure profile A
+        profile_b                     the pressure profile B
+        profile_c                     the pressure profile C
+        service_boiler                the state of the service boiler
+        service_boiler_temperature    the desired temperature of the service boiler
+        standby                       the standby state of the machine
+        temperature_unit              the temperature unit
+        total_coffee_count            the coffee cycles
+        water_feed                    the source of the water feed
+        addresses                     display all implemented memory addresses / settings (debugging)
+        read                          manually read memory data (debugging)
+        write                         manually write memory data (debugging)
+
+    optional arguments:
+      -h, --help                      show this help message and exit
+      -v, --verbose                   verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)
+      -f LOGFILE, --logfile LOGFILE   the filename of the logfile
+
+
+You can also display the help for a single action:
+
+.. code-block::
+
+    rocket-r60v language --help
+    usage: rocket-r60v language [-h] [{English,German,French,Italian}]
+
+    positional arguments:
+      {English,German,French,Italian}
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
 
 For example, to query the language you can use:
 
