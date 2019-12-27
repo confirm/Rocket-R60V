@@ -96,13 +96,29 @@ class ProfileA(WritableSetting):
         '''
         Build steps out of received data.
 
+        Each pressure profile has 5 steps, each with a timing (seconds) and a
+        pressure (bar) value.
+
+        The timing is stored in the first 10 data sequence items, the pressure
+        in the last 5 data sequence items. As each value has a precision of .1
+        (deciseconds, decibar), the data values are multiplied by 10. Thus,
+        an integer base-10 value of 95 is actually 9.5 (seconds or bar).
+
+        As mentioned before, the timing is stored in the first 10 data sequence
+        items. This is because of the limitation of an 8-bit integer. Each step
+        takes up to 60 seconds (i.e. 600), but an 8-bit integer can only
+        reflect 25.5 seconds (i.e. 255 / 0xFF). Therefor two 8-bit integers in a
+        row are used for the seconds. The second integer reflects the modulo
+        256 of the total seconds, the first integer contains the rest of the
+        modulo.
+
         :param list data: The received data
 
         :return: The steps
         :rtype: generator
         '''
         for i in range(0, 5):
-            timing = (data[0 + i * 2] / 10) + (data[1 + i * 2] * 256 / 10)
+            timing = ((data[0 + i * 2]) + (data[1 + i * 2] * 256)) / 10
             pressure = data[10 + i] / 10
             yield self.validate_step(timing, pressure)
 
@@ -125,18 +141,22 @@ class ProfileA(WritableSetting):
 
         :raises rocket.exceptions.SettingValueError: When an invalid choice is selected
         '''
-        steps   = profile.strip().split(' ')
+        steps   = str(profile).strip().split(' ')
         count   = len(steps)
         profile = []
 
-        if 5 < count < 1:
+        try:
+            assert 1 <= count <= 5
+
+            for step in steps:
+                values = step.split(':')
+                assert len(values) == 2
+                profile.append(self.validate_step(*values))
+
+        except AssertionError:
             error = 'Invalid pressure profile format "%s", valid format is 5x "{timing}:{pressure}"'
             LOGGER.error(error, profile)
             raise SettingValueError(error % profile)
-
-        for step in steps:
-            values = step.split(':')
-            profile.append(self.validate_step(*values))
 
         timing_data = []
         pressure_data     = []

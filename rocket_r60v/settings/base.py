@@ -196,7 +196,7 @@ class RangeSetting(WritableSetting):
         try:
             value = int(value)
             assert min_value <= value <= max_value
-        except (AssertionError, ValueError):
+        except (AssertionError, ValueError, TypeError):
             error = 'Value "%s" is not a number or not in valid range [%d-%d]'
             LOGGER.error(error, value, min_value, max_value)
             raise SettingValueError(error % (value, min_value, max_value))

@@ -43,7 +43,7 @@ class AutoOn(WritableSetting):
         :param str time: The time
         '''
         try:
-            hour, minute = time.split(':')
+            hour, minute = str(time).split(':')
             hour         = int(hour)
             minute       = int(minute)
             assert 0 <= hour <= 23
