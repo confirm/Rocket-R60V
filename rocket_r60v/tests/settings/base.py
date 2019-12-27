@@ -8,6 +8,7 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from rocket_r60v.machine import Machine
+from rocket_r60v.exceptions import SettingValueError
 
 logging.disable()
 
@@ -49,3 +50,19 @@ class TestSetting(TestCase):
                 setattr(machine, self.machine_property, value)
 
             mock_socket.return_value.send.assert_called_with(expected_request_message.encode())
+
+    def test_basic_validation(self):
+        '''
+        Test basic validation.
+        '''
+        instance = self.setting_class(None)
+
+        if hasattr(instance, 'set'):
+            with self.assertRaises(SettingValueError):
+                instance.set(0)
+
+            with self.assertRaises(SettingValueError):
+                instance.set(None)
+
+            with self.assertRaises(SettingValueError):
+                instance.set('invalid-choice')

@@ -15,6 +15,7 @@ import logging
 from unittest import main
 
 from rocket_r60v.settings import ActiveProfile, ProfileA, ProfileB, ProfileC
+from rocket_r60v.exceptions import SettingValueError
 
 from .base import TestSetting
 
@@ -104,9 +105,9 @@ class TestProfileA(TestSetting):
             '6:4 18:9 6:5 0:0 0:0',
         )
 
-    def test_incomplete_profiles(self):
+    def test_incomplete_profile(self):
         '''
-        Test writing of incomplete profiles.
+        Test writing of incomplete profile.
         '''
         self._test(
             'w0016000F3C00B4003C0000000000285A3200001B',
@@ -114,6 +115,13 @@ class TestProfileA(TestSetting):
             'OK',
             '6:4 18:9 6:5',
         )
+
+    def test_invalid_profiles(self):
+        '''
+        Test writing of invalid profile.
+        '''
+        with self.assertRaises(SettingValueError):
+            ProfileA(None).set('1:2 2:3 3:x')
 
 
 class TestProfileB(TestSetting):
