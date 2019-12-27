@@ -4,6 +4,10 @@
 Unit test cases for the Rocket message module.
 '''
 
+__all__ = (
+    'TestMessage',
+)
+
 import logging
 from unittest import TestCase, main
 

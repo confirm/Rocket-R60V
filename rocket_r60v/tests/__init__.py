@@ -2,5 +2,6 @@
 Unit tests for the Rocket module.
 '''
 
-from .machine import TestMachine
-from .message import TestMessage
+from .machine import *
+from .message import *
+from .settings import *

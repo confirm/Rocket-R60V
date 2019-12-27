@@ -4,6 +4,10 @@
 Unit test cases for the Rocket machine module.
 '''
 
+__all__ = (
+    'TestMachine',
+)
+
 import logging
 from unittest import TestCase, main
 from unittest.mock import patch
@@ -36,7 +40,7 @@ class TestMachine(TestCase):
             machine.connect()
 
     @patch('rocket_r60v.api.socket.create_connection')
-    def test_socket_missing_hello(self, socket_mock_function):
+    def test_socket_missing_hello(self, mock_socket):
         '''
         Test if ``RocketConnectionError`` is raised when socket connects but
         machine doesn't respond with ``*HELLO*``.
@@ -46,13 +50,13 @@ class TestMachine(TestCase):
             machine.connect()
 
     @patch('rocket_r60v.api.socket.create_connection')
-    def test_socket_connect(self, socket_mock_function):
+    def test_socket_connect(self, mock_socket):
         '''
         Test the socket connection.
         '''
-        socket_mock_function.return_value.recv.return_value = b'*HELLO*'
+        mock_socket.return_value.recv.return_value = b'*HELLO*'
         Machine().connect()
-        socket_mock_function.assert_called_with(('192.168.1.1', 1774), 3.0)
+        mock_socket.assert_called_with(('192.168.1.1', 1774), 3.0)
 
 
 if __name__ == '__main__':
