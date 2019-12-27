@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 '''
 Unit test cases for a Rocket settings module.
 '''
@@ -18,6 +19,12 @@ class TestSetting(TestCase):
 
     def _test(self, expected_request_message, response_message, expected_return_value, value=None):
         '''
+        Test setting communication / messages.
+
+        :param str expected_request_message: The expected request message
+        :param str response_message: The response message which should be returned for testing
+        :param str expected_return_value: The expected return value
+        :param value: The value to set
         '''
         with patch('rocket_r60v.api.socket.create_connection') as mock_socket:
             machine  = Machine()

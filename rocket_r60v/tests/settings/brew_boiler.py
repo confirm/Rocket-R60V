@@ -1,27 +1,33 @@
 #!/usr/bin/env python
 # pylint: disable=no-self-use,unused-argument
 '''
-Unit test case for the brew boiler temperature setting.
+Unit test cases for the brew boiler setting.
 '''
 
 __all__ = (
     'TestBrewBoilerTemperature',
 )
 
+import logging
 from unittest import main
 
 from rocket_r60v.settings import BrewBoilerTemperature
 
 from .base import TestSetting
 
+logging.disable()
+
 
 class TestBrewBoilerTemperature(TestSetting):
+    '''
+    Test brew boiler temperature setting.
+    '''
     setting_class    = BrewBoilerTemperature
     machine_property = 'brew_boiler_temperature'
 
     def test_read(self):
         '''
-        Test reading of the value.
+        Test reading of the brew boiler temperature.
         '''
         self._test(
             'r00020001F5',
@@ -31,7 +37,7 @@ class TestBrewBoilerTemperature(TestSetting):
 
     def test_setter(self):
         '''
-        Test setting of the value.
+        Test setting of the brew boiler temperature.
         '''
         self._test(
             'w000200016969',
