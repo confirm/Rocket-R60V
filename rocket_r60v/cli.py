@@ -135,14 +135,10 @@ class CLI:
         :rtype: str
         '''
         settings = sorted(self.machine.settings.items(), key=lambda x: x[1].address)
-        addresses = 'DEC HEX  LEN  SETTING\n'
+        addr = 'DEC HEX  LEN  SETTING\n'
         for name, setting in settings:
-            addresses += f'{setting.address:02d}  {setting.address:#04X} ({setting.length:02d}) {name}\n'
-        return addresses
-
-        # for name, setting in self.machine.settings.items():
-        #     addresses.append((setting.address, name))
-        # return str(sorted(addresses, key=lambda x: x[0]))
+            addr += f'{setting.address:02d}  {setting.address:#04X} ({setting.length:02d}) {name}\n'
+        return addr
 
     def execute(self):
         '''
