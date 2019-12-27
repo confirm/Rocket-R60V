@@ -136,80 +136,7 @@ For example, the ``smali/singleton/SettingsSingleton.smali`` contains lines whic
 
 These are significant static fields which point to a byte address of a specific setting. Fortunately, with a bit knowledge of Italian (or a translator), you found yourself a mapping between the settings and the actual memory addresses. The addresses are 16bit unsigned integers, encoded in uppercase hex characters.
 
-A bit of grepping like ``grep -R 'ADDRESS:I'`` can disclose even more addresses:
-
-.. code-block:: 
-
-    smali/singleton/DbCounterSingleton.smali:.field public static final CICLI_MANUT_ADDRESS:I = 0x59
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K1_GR1_ADDRESS:I = 0x97
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K1_GR2_ADDRESS:I = 0xa1
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K1_GR3_ADDRESS:I = 0xab
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K2_GR1_ADDRESS:I = 0x99
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K2_GR2_ADDRESS:I = 0xa3
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K2_GR3_ADDRESS:I = 0xad
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K3_GR1_ADDRESS:I = 0x9b
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K3_GR2_ADDRESS:I = 0xa5
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K3_GR3_ADDRESS:I = 0xaf
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K4_GR1_ADDRESS:I = 0x9d
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K4_GR2_ADDRESS:I = 0xa7
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K4_GR3_ADDRESS:I = 0xb1
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K5_GR1_ADDRESS:I = 0x9f
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K5_GR2_ADDRESS:I = 0xa9
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_K5_GR3_ADDRESS:I = 0xb3
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_LAVAGGIO_ADDRESS:I = 0xc7
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_PARZ_ADDRESS:I = 0x4b
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_POMPA_ADDRESS:I = 0xcb
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_RIEMPIMENTO_ADDRESS:I = 0xcf
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_TEA1_ADDRESS:I = 0xb5
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_TEA2_ADDRESS:I = 0xb7
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_TEA3_ADDRESS:I = 0xb9
-    smali/singleton/DbCounterSingleton.smali:.field public static final COUNT_TOT_ADDRESS:I = 0x4d
-    smali/singleton/DbCounterSingleton.smali:.field public static final LITRI_FILTRO_ADDRESS:I = 0xc3
-    smali/singleton/SettingsSingleton.smali:.field private static final ENAB_CALDVAP_ADDRESS:I = 0x49
-    smali/singleton/SettingsSingleton.smali:.field private static final ENAB_PROG_ADDRESS:I = 0x55
-    smali/singleton/SettingsSingleton.smali:.field private static final KD_CAFFE_ADDRESS:I = 0x10
-    smali/singleton/SettingsSingleton.smali:.field private static final KD_GRUPPO_ADDRESS:I = 0x12
-    smali/singleton/SettingsSingleton.smali:.field private static final KI_CAFFE_ADDRESS:I = 0xa
-    smali/singleton/SettingsSingleton.smali:.field private static final KI_GRUPPO_ADDRESS:I = 0xc
-    smali/singleton/SettingsSingleton.smali:.field private static final KP_CAFFE_ADDRESS:I = 0x4
-    smali/singleton/SettingsSingleton.smali:.field private static final KP_GRUPPO_ADDRESS:I = 0x6
-    smali/singleton/SettingsSingleton.smali:.field private static final LINGUA_ADDRESS:I = 0x1
-    smali/singleton/SettingsSingleton.smali:.field private static final STATO_MACCHINA_ADDRESS:I = 0x4a
-    smali/singleton/SettingsSingleton.smali:.field private static final TEMPERATURA_VAPORE_ADDRESS:I = 0x3
-    smali/singleton/SettingsSingleton.smali:.field private static final TEMP_SET_CAF_ADDRESS:I = 0x2
-    smali/singleton/SettingsSingleton.smali:.field private static final TEMP_SET_GRUPPO_ADDRESS:I = 0x4c
-    smali/singleton/SettingsSingleton.smali:.field private static final TEMP_SET_LANCIA_ADDRESS:I = 0x45
-    smali/singleton/SettingsSingleton.smali:.field private static final TIPO_TASTIERA_ADDRESS:I = 0x47
-    smali/singleton/SettingsSingleton.smali:.field private static final T_LAV_LANCIA_ADDRESS:I = 0x48
-    smali/singleton/SettingsSingleton.smali:.field private static final UM_TEMP_ADDRESS:I
-    smali/singleton/PrebrewingSingleton.smali:.field public static final ENAB_PRE_INF_ADDRESS:I = 0x2b
-    smali/singleton/PrebrewingSingleton.smali:.field public static final T_OFF_PRE_INF_ADDRESS:I = 0x2c
-    smali/singleton/PrebrewingSingleton.smali:.field public static final T_ON_PRE_INF_ADDRESS:I = 0x30
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K1_GR1_ADDRESS:I = 0x5d
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K1_GR2_ADDRESS:I = 0x67
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K1_GR3_ADDRESS:I = 0x71
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K2_GR1_ADDRESS:I = 0x5f
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K2_GR2_ADDRESS:I = 0x69
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K2_GR3_ADDRESS:I = 0x73
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K3_GR1_ADDRESS:I = 0x61
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K3_GR2_ADDRESS:I = 0x6b
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K3_GR3_ADDRESS:I = 0x75
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K4_GR1_ADDRESS:I = 0x63
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K4_GR2_ADDRESS:I = 0x6d
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K4_GR3_ADDRESS:I = 0x77
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K5_GR1_ADDRESS:I = 0x65
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K5_GR2_ADDRESS:I = 0x6f
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_K5_GR3_ADDRESS:I = 0x79
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_TEA1_ADDRESS:I = 0x7b
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_TEA2_ADDRESS:I = 0x7c
-    smali/singleton/DosesSingleton.smali:.field public static final DOSES_COUNT_TEA3_ADDRESS:I = 0x7d
-    smali/singleton/TimerSingleton.smali:.field public static final DAY_OFF_ADDRESS:I = 0x55
-    smali/singleton/TimerSingleton.smali:.field public static final MIN_AUTO_OFF_ADDRESS:I = 0x54
-    smali/singleton/TimerSingleton.smali:.field public static final MIN_AUTO_ON_ADDRESS:I = 0x52
-    smali/singleton/TimerSingleton.smali:.field public static final ORA_AUTO_OFF_ADDRESS:I = 0x53
-    smali/singleton/TimerSingleton.smali:.field public static final ORA_AUTO_ON_ADDRESS:I = 0x51
-    smali/singleton/TextSingleton.smali:.field public static final NOME_ADDRESS:I = 0x6
-    smali/singleton/TextSingleton.smali:.field public static final NUMERO_ADDRESS:I = 0x17
+A bit of grepping like ``grep -R 'ADDRESS:I'`` or ``grep -R 'field public static final \w\+:I = 0x[0-9a-f]\{1,2\}$'`` can disclose even more addresses!
 
 .. note::
 
@@ -218,6 +145,151 @@ A bit of grepping like ``grep -R 'ADDRESS:I'`` can disclose even more addresses:
     Unfortunately, most iOS apps are compiled into machine code. The Rocket iOS app is no exception to this. There's only compiled machine code and no bytecode available. Decompiling machine code back into "readable" source code (e.g. Objectiv-C or Swift) is a much harder task. It would even be easier to disassembling it into assembly, but even that is a hard thing to do and hard to reverse engineer.
 
     Therefor I'd stick with the Java bytecode / APK and decode it for reverse engineering of the app / protocol. 
+
+Memory addresses
+----------------
+
+Here's a list of memory addresses I found in the bytecode, with an optional link to the implementation of the setting:
+
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| State | Address  |           Field Name           |                               Implementation / Notes                               |    example data    |
++=======+==========+================================+====================================================================================+====================+
+| ✅     | ``0x01`` | ``LINGUA_ADDRESS``             | `Language <rocket_r60v/settings/language.py>`_                                     |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x02`` | ``TEMP_SET_CAF_ADDRESS``       | `Brew Boiler Temperature <rocket_r60v/settings/brew_boiler_temperature.py>`_       |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x03`` | ``TEMPERATURA_VAPORE_ADDRESS`` | `Service Boiler Temperature <rocket_r60v/settings/service_boiler_temperature.py>`_ |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x04`` | ``KP_CAFFE_ADDRESS``           | *coffee [P]ID?*                                                                    | ``[15, 0]``        |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x06`` | ``KP_GRUPPO_ADDRESS``          | *group [P]ID?*                                                                     | ``[40, 0]``        |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x0a`` | ``KI_CAFFE_ADDRESS``           | *coffee P[I]D?*                                                                    | ``[1, 0]``         |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x0c`` | ``KI_GRUPPO_ADDRESS``          | *group P[I]D?*                                                                     | ``[1, 0]``         |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x10`` | ``KD_CAFFE_ADDRESS``           | *coffee PI[D]?*                                                                    | ``[65, 0]``        |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x12`` | ``KD_GRUPPO_ADDRESS``          | *group PI[D]?*                                                                     | ``[5, 0]``         |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x2b`` | ``ENAB_PRE_INF_ADDRESS``       | *enable pre-infusion?*                                                             | ``[0]``            |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x2c`` | ``T_OFF_PRE_INF_ADDRESS``      | *time off-preinfusion?*                                                            | ``[0, 0, 0, 0]``   |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x30`` | ``T_ON_PRE_INF_ADDRESS``       | *time on pre-infusion?*                                                            | ``[40, 90, 0, 0]`` |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x45`` | ``TEMP_SET_LANCIA_ADDRESS``    |                                                                                    | ``[0]``            |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x46`` | ``INGRESSO_ACQUA``             | `Water Feed <rocket_r60v/settings/water_feed.py>`_                                 |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x47`` | ``TIPO_TASTIERA_ADDRESS``      | `Active Profile <rocket_r60v/settings/active_profile.py>`_                         |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x48`` | ``T_LAV_LANCIA_ADDRESS``       |                                                                                    | ``[15]``           |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x49`` | ``ENAB_CALDVAP_ADDRESS``       | `Service Boiler <rocket_r60v/settings/service_boiler.py>`_                         |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x4a`` | ``STATO_MACCHINA_ADDRESS``     | `Standby <rocket_r60v/settings/standby.py>`_                                       |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x4b`` | ``COUNT_PARZ_ADDRESS``         | *partial coffee counter? counts up with* ``0x4d``                                  |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x4c`` | ``TEMP_SET_GRUPPO_ADDRESS``    |                                                                                    | ``[0]``            |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ✅     | ``0x4d`` | ``COUNT_TOT_ADDRESS``          | `Total Coffee Count <rocket_r60v/settings/count.py>`_                              |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x51`` | ``ORA_AUTO_ON_ADDRESS``        | `Auto On Hour <rocket_r60v/settings/timer.py>`_                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x52`` | ``MIN_AUTO_ON_ADDRESS``        | `Auto On Minute <rocket_r60v/settings/timer.py>`_                                  |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x53`` | ``ORA_AUTO_OFF_ADDRESS``       | `Auto Off Hour <rocket_r60v/settings/timer.py>`_                                   |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x54`` | ``MIN_AUTO_OFF_ADDRESS``       | `Auto Off Minute <rocket_r60v/settings/timer.py>`_                                 |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x55`` | ``DAY_OFF_ADDRESS``            | *weekdays when timer isn't active?*                                                | ``[0, 0, 0, 0]``   |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x55`` | ``ENAB_PROG_ADDRESS``          | *enable programming? same address as field above.*                                 |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x59`` | ``CICLI_MANUT_ADDRESS``        | *maintenance cycle by Rocket?*                                                     | ``[0, 0, 0, 0]``   |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x5d`` | ``DOSES_COUNT_K1_GR1_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x5f`` | ``DOSES_COUNT_K2_GR1_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x61`` | ``DOSES_COUNT_K3_GR1_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x63`` | ``DOSES_COUNT_K4_GR1_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x65`` | ``DOSES_COUNT_K5_GR1_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x67`` | ``DOSES_COUNT_K1_GR2_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x69`` | ``DOSES_COUNT_K2_GR2_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x6b`` | ``DOSES_COUNT_K3_GR2_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x6d`` | ``DOSES_COUNT_K4_GR2_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x6f`` | ``DOSES_COUNT_K5_GR2_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x71`` | ``DOSES_COUNT_K1_GR3_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x73`` | ``DOSES_COUNT_K2_GR3_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| ❓     | ``0x75`` | ``DOSES_COUNT_K3_GR3_ADDRESS`` |                                                                                    |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x77`` | ``DOSES_COUNT_K4_GR3_ADDRESS`` | *not working, invalid response envelope (when length 2)*                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x79`` | ``DOSES_COUNT_K5_GR3_ADDRESS`` | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x7b`` | ``DOSES_COUNT_TEA1_ADDRESS``   | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x7c`` | ``DOSES_COUNT_TEA2_ADDRESS``   | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x7d`` | ``DOSES_COUNT_TEA3_ADDRESS``   | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x97`` | ``COUNT_K1_GR1_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x99`` | ``COUNT_K2_GR1_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x9b`` | ``COUNT_K3_GR1_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x9d`` | ``COUNT_K4_GR1_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0x9f`` | ``COUNT_K5_GR1_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xa1`` | ``COUNT_K1_GR2_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xa3`` | ``COUNT_K2_GR2_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xa5`` | ``COUNT_K3_GR2_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xa7`` | ``COUNT_K4_GR2_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xa9`` | ``COUNT_K5_GR2_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xab`` | ``COUNT_K1_GR3_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xad`` | ``COUNT_K2_GR3_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xaf`` | ``COUNT_K3_GR3_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xb1`` | ``COUNT_K4_GR3_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xb3`` | ``COUNT_K5_GR3_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xb5`` | ``COUNT_TEA1_ADDRESS``         | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xb7`` | ``COUNT_TEA2_ADDRESS``         | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xb9`` | ``COUNT_TEA3_ADDRESS``         | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xc3`` | ``LITRI_FILTRO_ADDRESS``       | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xc7`` | ``COUNT_LAVAGGIO_ADDRESS``     | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xcb`` | ``COUNT_POMPA_ADDRESS``        | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
+| 🚫     | ``0xcf`` | ``COUNT_RIEMPIMENTO_ADDRESS``  | *not working, invalid response envelope*                                           |                    |
++-------+----------+--------------------------------+------------------------------------------------------------------------------------+--------------------+
 
 jffry's library
 ---------------
