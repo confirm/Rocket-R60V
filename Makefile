@@ -1,4 +1,26 @@
 #
+# Cleanup
+#
+
+clean:
+	rm -vrf .venv build dist .eggs *.egg-info hactar/server/static
+	find . -name '__pycache__' -delete
+
+#
+# Install
+#
+
+venv:
+	python3 -m venv .venv
+
+develop:
+	pip install -r requirements-dev.txt
+	pip install -e .
+
+install:
+	pip install .
+
+#
 # Test
 #
 
@@ -16,3 +38,16 @@ test-unittest:
 	python -munittest discover
 
 test: test-pycodestyle test-pylint test-unittest
+
+#
+# Build
+#
+
+build:
+	./setup.py sdist
+
+upload-test:
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+upload:
+	twine upload dist/*

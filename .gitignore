@@ -1,6 +1,9 @@
+*.egg-info/
 *.pyc
+.eggs/
 .pylintrc
 .venv/
 __pycache__/
+dist/
 rocket.log
 tox.ini
