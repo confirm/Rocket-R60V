@@ -42,13 +42,14 @@ class ReadOnlySetting:
         '''
         self.machine = machine
 
-    def send(self, command, data=None):
+    def send(self, command, data=None, unpack_response=True):
         '''
         Send a message to the machine.
 
         :param str command: The command [r|w]
         :param data: The data sequence
         :rtype data: None or list
+        :param bool unpack_data: Unpack response data when only one element
 
         :retrun: The response data
         :rtype: str
@@ -60,17 +61,24 @@ class ReadOnlySetting:
             data=data,
         )
 
-        return self.machine.send_message(message)
+        response = self.machine.send_message(message)
 
-    def get(self):
+        if len(response) == 1 and unpack_response:
+            return response[0]
+
+        return response
+
+    def get(self, unpack_response=True):
         '''
         Get the setting value from the machine.
+
+        :param bool unpack_data: Unpack response data when only one element
 
         :return: The setting value
         :rtype: mixed
         '''
         LOGGER.debug('Getting value for %s from machine…', self.__class__.__name__)
-        return self.send(command='r')
+        return self.send(command='r', unpack_response=unpack_response)
 
 
 class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
@@ -94,12 +102,12 @@ class WritableSetting(ReadOnlySetting):  # pylint: disable=abstract-method
 
         data = self.send(command='w', data=data)
 
-        if data[0] != 'OK':
+        if data != 'OK':
             error = 'Expected response data was "OK", got "%s" instead'
             LOGGER.error(error, data)
             raise ValidationError(error % data)
 
-        return data[0]
+        return data
 
 
 class ChoiceSetting(WritableSetting):
@@ -127,7 +135,7 @@ class ChoiceSetting(WritableSetting):
         :rtype: str
         '''
         try:
-            index  = super().get(*args, **kwargs)[0]
+            index  = super().get(*args, **kwargs)
             choice = self.choices[index]
             LOGGER.info('Choice of %s is "%s"', self.__class__.__name__, choice)
             return choice
@@ -142,7 +150,7 @@ class ChoiceSetting(WritableSetting):
 
         :param str choice: The name of the choice
 
-        :raises rocket.exceptions.ValidationError: When response data isn't "OK"
+        :raises rocket.exceptions.SettingValueError: When an invalid choice is selected
         '''
         if choice not in self.choices:
             error = 'Invalid choice "%s", valid choises are "%s"'
@@ -182,13 +190,14 @@ class RangeSetting(WritableSetting):
         :return: The value
         :rtype: int
 
-        :raises AssertionError: When value is not in valid range
+        :raises rocket.exceptions.SettingValueError: When value is not in valid range
         '''
         min_value, max_value = self.range
         try:
+            value = int(value)
             assert min_value <= value <= max_value
-        except AssertionError:
-            error = 'Value "%d" is not in valid range [%d-%d]'
+        except (AssertionError, ValueError):
+            error = 'Value "%s" is not a number or not in valid range [%d-%d]'
             LOGGER.error(error, value, min_value, max_value)
             raise SettingValueError(error % (value, min_value, max_value))
 
@@ -200,8 +209,10 @@ class RangeSetting(WritableSetting):
 
         :return: The value
         :rtype: str
+
+        :raises rocket.exceptions.SettingValueError: When value is not in valid range
         '''
-        return self.validate_value(super().get(*args, **kwargs)[0])
+        return self.validate_value(super().get(*args, **kwargs))
 
     def set(self, value, *args, **kwargs):  # pylint: disable=arguments-differ
         '''
@@ -209,7 +220,6 @@ class RangeSetting(WritableSetting):
 
         :param str data: The setting value
 
-        :raises rocket.exceptions.ValidationError: When response data isn't "OK"
+        :raises rocket.exceptions.SettingValueError: When value is not in valid range
         '''
-        value = int(value)
         return super().set([self.validate_value(value)], *args, **kwargs)

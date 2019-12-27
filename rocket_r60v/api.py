@@ -94,7 +94,7 @@ class API:
         :param int attempt: The attempt counter
 
         :return: The received data
-        :rtype: str
+        :rtype: list
         '''
         LOGGER.debug('Sending "%s", attempt %d…', message, attempt)
 

@@ -23,7 +23,7 @@ class AutoOn(WritableSetting):
     address = 81
     length = 2
 
-    def get(self):  # pylint: disable=arguments-differ
+    def get(self, *args, **kwargs):  # pylint: disable=arguments-differ
         '''
         Get the time value from the machine.
 
@@ -33,10 +33,10 @@ class AutoOn(WritableSetting):
         :return: The time
         :rtype: str
         '''
-        hour, minute = super().get()
+        hour, minute = super().get(*args, **kwargs)
         return f'{hour:02d}:{minute:02d}'
 
-    def set(self, time):  # pylint: disable=arguments-differ
+    def set(self, time, *args, **kwargs):  # pylint: disable=arguments-differ
         '''
         Set the time on the machine.
 
@@ -48,7 +48,7 @@ class AutoOn(WritableSetting):
             minute       = int(minute)
             assert 0 <= hour <= 23
             assert 0 <= minute <= 59
-            return super().set([hour, minute])
+            return super().set([hour, minute], *args, **kwargs)
 
         except (ValueError, AssertionError):
             error = 'Value "%s" is not in valid time (HH:MM)'
