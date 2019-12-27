@@ -5,8 +5,8 @@ Pressure profile settings.
 __all__ = (
     'ActiveProfile',
     'ProfileA',
-    # 'ProfileB',
-    # 'ProfileC',
+    'ProfileB',
+    'ProfileC',
 )
 
 import logging
