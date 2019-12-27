@@ -129,7 +129,7 @@ class ProfileA(WritableSetting):
         :return: The pressure profile
         :rtype: str
         '''
-        data = super().get(*args, **kwargs, unpack_response=False)
+        data = super().get(*args, **kwargs)
         data = [f'{x[0]}:{x[1]}' for x in self.build_steps_from_data(data)]
         return ' '.join(data)
 
