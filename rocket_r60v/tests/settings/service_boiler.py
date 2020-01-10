@@ -7,12 +7,14 @@ Unit test cases for the service boiler settings.
 __all__ = (
     'TestServiceBoiler',
     'TestServiceBoilerTemperature',
+    'TestCurrentServiceBoilerTemperature',
 )
 
 import logging
 from unittest import main
 
-from rocket_r60v.settings import ServiceBoiler, ServiceBoilerTemperature
+from rocket_r60v.settings import ServiceBoiler, ServiceBoilerTemperature, \
+    CurrentServiceBoilerTemperature
 
 from .base import TestSetting
 
@@ -87,6 +89,24 @@ class TestServiceBoilerTemperature(TestSetting):
             'w000300017B74',
             'w00030001OK95',
             'OK',
+            123,
+        )
+
+
+class TestCurrentServiceBoilerTemperature(TestSetting):
+    '''
+    Test current service boiler temperature setting.
+    '''
+    setting_class    = CurrentServiceBoilerTemperature
+    machine_property = 'current_service_boiler_temperature'
+
+    def test_read(self):
+        '''
+        Test reading of the service boiler temperature.
+        '''
+        self._test(
+            'rB001000106',
+            'rB00100017B7F',
             123,
         )
 

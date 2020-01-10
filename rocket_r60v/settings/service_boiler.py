@@ -5,9 +5,10 @@ Service boiler setting.
 __all__ = (
     'ServiceBoiler',
     'ServiceBoilerTemperature',
+    'CurrentServiceBoilerTemperature',
 )
 
-from .base import ChoiceSetting, RangeSetting
+from .base import ChoiceSetting, RangeSetting, ReadOnlySetting
 
 
 class ServiceBoiler(ChoiceSetting):
@@ -29,3 +30,10 @@ class ServiceBoilerTemperature(RangeSetting):
     address = 3
 
     range = (110, 126)
+
+
+class CurrentServiceBoilerTemperature(ReadOnlySetting):
+    '''
+    The current temperature of the service boiler.
+    '''
+    address = 0xB001

@@ -6,12 +6,13 @@ Unit test cases for the brew boiler setting.
 
 __all__ = (
     'TestBrewBoilerTemperature',
+    'TestCurrentBrewBoilerTemperature',
 )
 
 import logging
 from unittest import main
 
-from rocket_r60v.settings import BrewBoilerTemperature
+from rocket_r60v.settings import BrewBoilerTemperature, CurrentBrewBoilerTemperature
 
 from .base import TestSetting
 
@@ -44,6 +45,24 @@ class TestBrewBoilerTemperature(TestSetting):
             'w00020001OK94',
             'OK',
             105
+        )
+
+
+class TestCurrentBrewBoilerTemperature(TestSetting):
+    '''
+    Test current brew boiler temperature setting.
+    '''
+    setting_class    = CurrentBrewBoilerTemperature
+    machine_property = 'current_brew_boiler_temperature'
+
+    def test_read(self):
+        '''
+        Test reading of the brew boiler temperature.
+        '''
+        self._test(
+            'rB000000105',
+            'rB00000016974',
+            105,
         )
 
 
