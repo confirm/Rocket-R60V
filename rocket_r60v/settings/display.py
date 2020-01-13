@@ -15,7 +15,7 @@ class Display(ReadOnlySetting):
     The display content.
     '''
     address = 0xB007
-    length  = 48
+    length  = 64
 
     def get(self):  # pylint: disable=arguments-differ
         '''
