@@ -42,13 +42,13 @@ To display the available commands, use the ``--help`` flag:
 
     rocket-r60v --help
     usage: rocket-r60v [-h] [-v] [-f LOGFILE]
-                       {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
+                       {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,date-time,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
                        ...
 
     Remote control the Rocket R 60V.
 
     positional arguments:
-      {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
+      {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,date-time,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
         active-profile                      the active pressure profile
         auto-off                            the auto off (standby) time
         auto-on                             the auto on time
@@ -56,6 +56,7 @@ To display the available commands, use the ``--help`` flag:
         current-brew-boiler-temperature     the current temperature of the brew boiler
         current-brew-time                   the current brew time, taken from the display
         current-service-boiler-temperature  the current temperature of the service boiler
+        date-time                           the date & time (clock) of the machine
         display                             the display content
         language                            the language of the machine
         profile-a                           the pressure profile A

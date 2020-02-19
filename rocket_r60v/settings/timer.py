@@ -51,7 +51,7 @@ class AutoOn(WritableSetting):
             return super().set([hour, minute], *args, **kwargs)
 
         except (ValueError, AssertionError):
-            error = 'Value "%s" is not in valid time (HH:MM)'
+            error = 'Value "%s" is not a valid time (HH:MM)'
             LOGGER.error(error, time)
             raise SettingValueError(error % time)
 

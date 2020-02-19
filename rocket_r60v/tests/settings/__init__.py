@@ -4,6 +4,7 @@ Unit test cases for the Rocket settings package.
 
 from .brew_boiler import *
 from .count import *
+from .date_time import *
 from .display import *
 from .language import *
 from .profiles import *
