@@ -33,7 +33,7 @@ class CLI:
         Initialise the parser and subparser.
         '''
         def get_help_formatter(prog):
-            return argparse.HelpFormatter(prog, max_help_position=34, width=120)
+            return argparse.HelpFormatter(prog, max_help_position=40, width=120)
 
         self.parser = argparse.ArgumentParser(
             description='Remote control the Rocket R 60V.',

@@ -42,36 +42,40 @@ To display the available commands, use the ``--help`` flag:
 
     rocket-r60v --help
     usage: rocket-r60v [-h] [-v] [-f LOGFILE]
-                       {active_profile,auto_off,auto_on,brew_boiler_temperature,language,profile_a,profile_b,profile_c,service_boiler,service_boiler_temperature,standby,temperature_unit,total_coffee_count,water_feed,addresses,read,write}
+                       {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
                        ...
 
     Remote control the Rocket R 60V.
 
     positional arguments:
-      {active_profile,auto_off,auto_on,brew_boiler_temperature,language,profile_a,profile_b,profile_c,service_boiler,service_boiler_temperature,standby,temperature_unit,total_coffee_count,water_feed,addresses,read,write}
-        active_profile                the active pressure profile
-        auto_off                      the auto off (standby) time
-        auto_on                       the auto on time
-        brew_boiler_temperature       the desired temperature of the brew boiler
-        language                      the language of the machine
-        profile_a                     the pressure profile A
-        profile_b                     the pressure profile B
-        profile_c                     the pressure profile C
-        service_boiler                the state of the service boiler
-        service_boiler_temperature    the desired temperature of the service boiler
-        standby                       the standby state of the machine
-        temperature_unit              the temperature unit
-        total_coffee_count            the coffee cycles
-        water_feed                    the source of the water feed
-        addresses                     display all implemented memory addresses / settings (debugging)
-        read                          manually read memory data (debugging)
-        write                         manually write memory data (debugging)
+      {active-profile,auto-off,auto-on,brew-boiler-temperature,current-brew-boiler-temperature,current-brew-time,current-service-boiler-temperature,display,language,profile-a,profile-b,profile-c,service-boiler,service-boiler-temperature,standby,temperature-unit,total-coffee-count,water-feed,addresses,monitor-brew-time,read,write}
+        active-profile                      the active pressure profile
+        auto-off                            the auto off (standby) time
+        auto-on                             the auto on time
+        brew-boiler-temperature             the desired temperature of the brew boiler
+        current-brew-boiler-temperature     the current temperature of the brew boiler
+        current-brew-time                   the current brew time, taken from the display
+        current-service-boiler-temperature  the current temperature of the service boiler
+        display                             the display content
+        language                            the language of the machine
+        profile-a                           the pressure profile A
+        profile-b                           the pressure profile B
+        profile-c                           the pressure profile C
+        service-boiler                      the state of the service boiler
+        service-boiler-temperature          the desired temperature of the service boiler
+        standby                             the standby state of the machine
+        temperature-unit                    the temperature unit
+        total-coffee-count                  the coffee cycles
+        water-feed                          the source of the water feed
+        addresses                           display all implemented memory addresses / settings (debugging)
+        monitor-brew-time                   continously monitor brew time
+        read                                manually read memory data (debugging)
+        write                               manually write memory data (debugging)
 
     optional arguments:
-      -h, --help                      show this help message and exit
-      -v, --verbose                   verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)
-      -f LOGFILE, --logfile LOGFILE   the filename of the logfile
-
+      -h, --help                            show this help message and exit
+      -v, --verbose                         verbose mode (-v for error, -vv for warning, -vvv for info, -vvvv for debug)
+      -f LOGFILE, --logfile LOGFILE         the filename of the logfile
 
 You can also display the help for a single action:
 
