@@ -13,7 +13,7 @@ class Standby(ChoiceSetting):
     '''
     The standby state of the machine.
     '''
-    address = 74
+    address = 0x4A
 
     choices = (
         'off',

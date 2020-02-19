@@ -13,4 +13,4 @@ class TotalCoffeeCount(ReadOnlySetting):
     '''
     The coffee cycles.
     '''
-    address = 77
+    address = 0x4D

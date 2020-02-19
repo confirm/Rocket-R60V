@@ -14,7 +14,7 @@ class BrewBoilerTemperature(RangeSetting):
     '''
     The desired temperature of the brew boiler.
     '''
-    address = 2
+    address = 0x02
 
     range = (80, 110)
 
