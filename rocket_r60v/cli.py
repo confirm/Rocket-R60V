@@ -116,7 +116,7 @@ class CLI:
             doc = doc[0].lower() + doc[1:-1]
 
             setting_parser = self.subparsers.add_parser(
-                name,
+                name.replace('_', '-'),
                 help=doc,
             )
 
@@ -206,9 +206,10 @@ class CLI:
         :rtype: str
         '''
         args    = self.args
+        action  = args.action.replace('-', '_')
         machine = self.machine
 
         if hasattr(args, 'value') and args.value:
-            setattr(machine, args.action, args.value)
+            setattr(machine, action, args.value)
             return 'OK'
-        return str(getattr(machine, args.action))
+        return str(getattr(machine, action))
