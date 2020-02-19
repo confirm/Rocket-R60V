@@ -1,0 +1,19 @@
+language: python
+
+python:
+  - 3.6
+  - 3.7
+
+install:
+  - make develop
+
+script:
+  # Code style checks.
+  - make test-pycodestyle
+  - make test-pylint
+
+  # Unit tests.
+  - make test-unittest
+
+  # Build check.
+  - make build
