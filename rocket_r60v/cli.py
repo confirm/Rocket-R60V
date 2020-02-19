@@ -4,6 +4,7 @@ CLI module.
 
 import argparse
 import logging
+from time import sleep
 
 from .message import Message
 
@@ -70,6 +71,11 @@ class CLI:
         self.subparsers.add_parser(
             'addresses',
             help='display all implemented memory addresses / settings (debugging)',
+        )
+
+        self.subparsers.add_parser(
+            'monitor-brew-time',
+            help='continously monitor brew time',
         )
 
         read_parser = self.subparsers.add_parser(
@@ -163,6 +169,8 @@ class CLI:
 
         if args.action in ('read', 'write'):
             return getattr(self, f'execute_{args.action}_action')()
+        if args.action == 'monitor-brew-time':
+            return self.monitor_brew_time()
 
         return self.execute_machine_action()
 
@@ -213,3 +221,18 @@ class CLI:
             setattr(machine, action, args.value)
             return 'OK'
         return str(getattr(machine, action))
+
+    def monitor_brew_time(self):
+        '''
+        Continuously monitor the brew time.
+        '''
+        try:
+            print('Starting brew time monitor. Press Ctrl-C to cancel…')
+            while True:
+                time = self.machine.current_brew_time
+                if time is None:
+                    sleep(1)
+                    continue
+                print(time)
+        except KeyboardInterrupt:
+            pass
