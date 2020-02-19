@@ -28,14 +28,14 @@ class TestMachine(TestCase):
         Make sure ``ConnectionRefusedError`` is raised.
         '''
         machine = Machine(address='127.0.0.1')
-        with self.assertRaises(ConnectionRefusedError):
+        with self.assertRaises(RocketConnectionError):
             machine.connect()
 
     def test_unreachable_address(self):
         '''
         Make sure ``RocketConnectionError`` is raised when address is not reachable.
         '''
-        machine = Machine(address='127.1.0.1')
+        machine = Machine(address='127.1.2.3')
         with self.assertRaises(RocketConnectionError):
             machine.connect()
 

@@ -53,7 +53,7 @@ class API:
 
         try:
             self.socket = socket.create_connection((address, port), timeout)
-        except socket.timeout as ex:
+        except (ConnectionRefusedError, socket.timeout) as ex:
             error = 'Connection to %s:%d failed'
             LOGGER.error(error, address, port)
             raise RocketConnectionError(error % (address, port)) from ex
