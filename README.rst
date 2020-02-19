@@ -115,11 +115,11 @@ The Python API can be used like this:
     machine = Machine()
     machine.connect()
 
-    # Get language unit from machine.
+    # Get language from machine.
     print(machine.language)
 
-    # Set language unit on machine.
-    machine.temperature_unit = 'English'
+    # Set language on machine.
+    machine.language = 'English'
 
 All available settings can be displayed via CLI command ``rocket-r60v --help`` or by inspecting the `settings module <rocket_r60v/settings/__init__.py>`_.
 
